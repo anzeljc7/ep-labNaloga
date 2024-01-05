@@ -3,8 +3,14 @@
 // enables sessions for the entire app
 session_start();
 
+define('ORDER_PENDING', 1000);
+define('ORDER_CONFIRMED', 2000);
+define('ORDER_CANCELED', 3000);
+define('ORDER_REMOVED', 4000);
+
 require_once("controller/ItemsController.php");
 require_once("controller/ShoppingController.php");
+require_once("controller/OrdersController.php");
 
 define("BASE_URL", $_SERVER["SCRIPT_NAME"] . "/");
 define("IMAGES_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php") . "static/images/");
@@ -41,12 +47,33 @@ $urls       = [
     "shop/updateCart" => function () {
         ShoppingController::updateCart();
     },
-    "shop/ConfirmOrder" => function () {
-        ShoppingController::confirmOrder();
+    "shop/previewOrder" => function () {
+        ShoppingController::orderPreview();
+    },
+    "shop/confirmOrder" => function () {
+        ShoppingController::orderConfirm();
+    },
+    "orders" => function () {
+        OrdersController::index();
+    },
+    "ordersPending" => function () {
+        OrdersController::ordersPending();
+    },
+    "ordersConfirmed" => function () {
+        OrdersController::ordersConfirmed();
+    },
+    "ordersCanceled" => function () {
+        OrdersController::ordersCanceled();
+    },
+    "ordersRemoved" => function () {
+        OrdersController::ordersRemoved();
+    },
+    "orders/update" => function () {
+        OrdersController::ordersUpdate();
     },
     "" => function () {
         ViewHelper::redirect(BASE_URL . "shop");
-    },
+    }
 ];
 
 try {

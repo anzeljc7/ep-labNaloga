@@ -37,8 +37,8 @@
                     <form action="<?= BASE_URL . "shop/deleteCart" ?>" method="post">
                         <button type="submit">Empty shopping cart</button>
                     </form>
-                    <form action="<?= BASE_URL . "shop/confirmOrder" ?>" method="post">
-                        <button type="submit">Confirm order</button>
+                    <form action="<?= BASE_URL . "shop/previewOrder" ?>" method="post">
+                        <button type="submit">Submit order</button>
                     </form>
             </p>
         </div>

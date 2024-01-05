@@ -1,6 +1,8 @@
 <?php
 
 require_once("model/ItemDB.php");
+require_once("model/OrderDB.php");
+require_once("model/OrderItemDB.php");
 require_once("model/ItemImageDB.php");
 require_once("ViewHelper.php");
 require_once("forms/ItemsForm.php");
@@ -39,29 +41,29 @@ class ShoppingController {
         ];
 
         $data = filter_input_array(INPUT_POST, $rules);
-        $id = $data["id"];
-        
+        $id   = $data["id"];
+
         if (isset($_SESSION["cart"][$id])) {
-                    $_SESSION["cart"][$id]++;
-                } else {
-                    $_SESSION["cart"][$id] = 1;
+            $_SESSION["cart"][$id]++;
+        } else {
+            $_SESSION["cart"][$id] = 1;
         }
-        
+
         echo ViewHelper::render("view/items/available-item-list.php", [
-                "items" => ItemDB::getAllActive(),
-                "cartItems" => self::getItemsFromSession()
-            ]);
+            "items" => ItemDB::getAllActive(),
+            "cartItems" => self::getItemsFromSession()
+        ]);
     }
 
     public static function deleteFromCart() {
         unset($_SESSION["cart"]);
         echo ViewHelper::render("view/items/available-item-list.php", [
-                "items" => ItemDB::getAllActive(),
-                "cartItems" => self::getItemsFromSession()
-            ]);
+            "items" => ItemDB::getAllActive(),
+            "cartItems" => self::getItemsFromSession()
+        ]);
     }
-    
-    public static function updateCart(){
+
+    public static function updateCart() {
         $rules = [
             "id" => [
                 'filter' => FILTER_VALIDATE_INT,
@@ -74,30 +76,71 @@ class ShoppingController {
         ];
 
         $data = filter_input_array(INPUT_POST, $rules);
-        $id = $data["id"];
-        $qty = $data["qty"];
+        $id   = $data["id"];
+        $qty  = $data["qty"];
 
-        if($qty == 0){
-                unset($_SESSION["cart"][$id]);
-                if(count($_SESSION["cart"]) == 0 ){
-                    unset($_SESSION["cart"]);  
-                }        
+        if ($qty == 0) {
+            unset($_SESSION["cart"][$id]);
+            if (count($_SESSION["cart"]) == 0) {
+                unset($_SESSION["cart"]);
             }
-            else{
-                $_SESSION["cart"][$id] = $qty;
-            }
-            
+        } else {
+            $_SESSION["cart"][$id] = $qty;
+        }
+
         echo ViewHelper::render("view/items/available-item-list.php", [
-                "items" => ItemDB::getAllActive(),
-                "cartItems" => self::getItemsFromSession()
-            ]);
+            "items" => ItemDB::getAllActive(),
+            "cartItems" => self::getItemsFromSession()
+        ]);
     }
-    
-    public static function confirmOrder() {
+
+    public static function orderPreview() {
+        $currentUser['name']     = "Tilen";
+        $currentUser['surname']  = "Anzeljc";
+        $currentUser['email']    = "tilen.anzeljc@gmail.com";
+        $currentUser['phone']    = "041587758";
+        $address['street']       = "Mali Log";
+        $address['house_number'] = "33a";
+        $address['postal_code']  = 1318;
+        $address['city']         = "Loski Potok";
+        $currDate  = date('Y-m-d H:i:s');
+        $cartItems               = self::getItemsFromSession();
+        $cartItems['date']       = $currDate;
+
+        echo ViewHelper::render("view/orders/order-preview.php", [
+            "currentUser" => $currentUser,
+            "address" => $address,
+            "cartItems" => $cartItems
+        ]);
+    }
+
+    public static function orderConfirm() {
         $cartItems = self::getItemsFromSession();
-        
-        
-        
+        $user      = 1;
+        $currDate  = date('Y-m-d H:i:s');
+
+        $orderParams['user_id']    = 1;
+        $orderParams['status_id']  = 1000;
+        $orderParams['order_date'] = $currDate;
+        $orderParams['total']      = $cartItems['total'];
+
+        $orderId = OrderDB::insert($orderParams);
+
+        foreach ($cartItems["items"] as $item) {
+            $orderItemParams['order_id'] = $orderId;
+            $orderItemParams['item_id']  = $item['item_id'];
+            $orderItemParams['quantity'] = $item['qty'];
+            
+            OrderItemDB::insert($orderItemParams);
+        }
+
+        $orderSuccess['id']   = $orderId;
+        $orderSuccess['date'] = $currDate;
+
+        unset($_SESSION["cart"]);
+        echo ViewHelper::render("view/orders/order-confirmation.php", [
+            "orderSuccess" => $orderSuccess
+        ]);
     }
 
     private static function getItemsFromSession() {
@@ -105,11 +148,11 @@ class ShoppingController {
 
         if (isset($_SESSION["cart"])) {
             foreach ($_SESSION["cart"] as $id => $quantity) {
-                $queryParams["item_id"] = $id;
-                $item       = ItemDB::get($queryParams);
-                $cartItems["items"][$id]= $item;
+                $queryParams["item_id"]         = $id;
+                $item                           = ItemDB::get($queryParams);
+                $cartItems["items"][$id]        = $item;
                 $cartItems["items"][$id]['qty'] = $quantity;
-                $totalValue += $quantity * $item['price'];
+                $totalValue                     += $quantity * $item['price'];
             }
             $cartItems['total'] = $totalValue;
             return $cartItems;

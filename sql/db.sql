@@ -1,7 +1,8 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     4. 01. 2024 12:20:01                         */
+/* Created on:     5. 01. 2024 18:33:24                         */
 /*==============================================================*/
+
 
 
 drop table if exists ItemImage;
@@ -15,13 +16,12 @@ drop table if exists OrderStatus;
 drop table if exists UserType;
 
 
-
 /*==============================================================*/
 /* Table: Address                                               */
 /*==============================================================*/
 create table Address
 (
-   ADDRESS_ID           int not null,
+   ADDRESS_ID           int auto_increment not null,
    POSTAL_CODE          int not null,
    STREET               varchar(255) not null,
    HOUSE_NUMBER         int not null,
@@ -33,7 +33,7 @@ create table Address
 /*==============================================================*/
 create table Item
 (
-   ITEM_ID              int not null,
+   ITEM_ID              int auto_increment not null,
    ITEM_NAME            varchar(255) not null,
    PRICE                float not null,
    ACTIVE               bool not null,
@@ -46,7 +46,7 @@ create table Item
 /*==============================================================*/
 create table ItemImage
 (
-   IMAGE_ITEM_ID        int not null,
+   IMAGE_ITEM_ID        int auto_increment not null,
    ITEM_ID              int not null,
    IMAGE_PATH           varchar(255) not null,
    primary key (IMAGE_ITEM_ID)
@@ -88,7 +88,7 @@ create table PostalCode
 /*==============================================================*/
 create table StoreUser
 (
-   USER_ID              int not null,
+   USER_ID              int auto_increment not null,
    TYPE_ID              int not null,
    ADDRESS_ID           int,
    NAME                 varchar(100) not null,
@@ -105,10 +105,11 @@ create table StoreUser
 /*==============================================================*/
 create table UserOrder
 (
-   ORDER_ID             int not null,
+   ORDER_ID             int auto_increment not null,
    USER_ID              int not null,
    STATUS_ID            int not null,
    ORDER_DATE           datetime not null,
+   TOTAL                float not null,
    primary key (ORDER_ID)
 );
 

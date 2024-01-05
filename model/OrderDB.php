@@ -2,28 +2,27 @@
 
 require_once 'model/AbstractDB.php';
 
-class ItemDB extends AbstractDB {
+class OrderDB extends AbstractDB {
 
     public static function insert(array $params) {
-        return parent::modify("INSERT INTO Order (item_name, price, active, description) "
-                        . " VALUES (:item_name, :price, :active, :description)", $params);
+        return parent::modify("INSERT INTO UserOrder (user_id, status_id, order_date, total) "
+                        . " VALUES (:user_id, :status_id, :order_date, :total)", $params);
     }
 
     public static function update(array $params) {
-        return parent::modify("UPDATE Item SET item_name = :item_name, price = :price, "
-                        . "description = :description, price = :price"
-                        . " WHERE item_id = :item_id", $params);
+        return parent::modify("UPDATE UserOrder SET status_id = :status_id"
+                        . " WHERE order_id = :order_id", $params);
     }
 
     public static function delete(array $id) {
-        return parent::modify("DELETE FROM book WHERE id = :id", $id);
+        return parent::modify("DELETE FROM UserOrder WHERE order_id = :order_id", $id);
     }
 
     public static function get(array $id) {
-        $items = parent::query("SELECT item_id, item_name, price, active, description"
-                        . " FROM Item"
-                        . " WHERE item_id = :item_id", $id);
-        
+        $items = parent::query("SELECT order_id, user_id, status_id, order_date, total"
+                        . " FROM UserOrder"
+                        . " WHERE order_id = :order_id", $id);
+
         if (count($items) == 1) {
             return $items[0];
         } else {
@@ -32,22 +31,24 @@ class ItemDB extends AbstractDB {
     }
 
     public static function getAll() {
-        return parent::query("SELECT item_id, item_name, price, active, description"
-                        . " FROM Item"
-                        . " ORDER BY item_id ASC");
-    }
-    
-    public static function activateDeactivate(array $params) {
-        return parent::modify("UPDATE Item SET active = :active"
-                            . " WHERE item_id = :item_id", $params);
-    }
-    
-    
-    public static function getAllActive() {
-        return parent::query("SELECT item_id, item_name, price, description"
-                        . " FROM Item"
-                        . " WHERE active = 1"
-                        . " ORDER BY item_id ASC");
+        return parent::query("SELECT order_id, user_id, status_id, order_date, total"
+                        . " FROM UserOrder"
+                        . " ORDER BY order_id ASC");
     }
 
+    public static function getByStatus(array $statusId) {
+        $items = parent::query("SELECT order_id, user_id, status_id, order_date, total"
+                        . " FROM UserOrder"
+                        . " WHERE status_id = :status_id", $statusId);
+
+        return $items;
+    }
+
+    public static function getByUser(array $userId) {
+        $items = parent::query("SELECT order_id, user_id, status_id, order_date, total"
+                        . " FROM UserOrder"
+                        . " WHERE user_id = :user_id", $userId);
+
+        return $items;
+    }
 }
