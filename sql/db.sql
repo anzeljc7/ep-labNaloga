@@ -1,32 +1,16 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     5. 01. 2024 18:33:24                         */
+/* Created on:     6. 01. 2024 09:41:57                         */
 /*==============================================================*/
-
-
 
 drop table if exists ItemImage;
 drop table if exists OrderItem;
 drop table if exists Item;
 drop table if exists UserOrder;
 drop table if exists StoreUser;
-drop table if exists Address;
 drop table if exists PostalCode;
 drop table if exists OrderStatus;
 drop table if exists UserType;
-
-
-/*==============================================================*/
-/* Table: Address                                               */
-/*==============================================================*/
-create table Address
-(
-   ADDRESS_ID           int auto_increment not null,
-   POSTAL_CODE          int not null,
-   STREET               varchar(255) not null,
-   HOUSE_NUMBER         int not null,
-   primary key (ADDRESS_ID)
-);
 
 /*==============================================================*/
 /* Table: Item                                                  */
@@ -89,13 +73,14 @@ create table PostalCode
 create table StoreUser
 (
    USER_ID              int auto_increment not null,
+   POSTAL_CODE          int,
    TYPE_ID              int not null,
-   ADDRESS_ID           int,
    NAME                 varchar(100) not null,
    SURNAME              varchar(100) not null,
    EMAIL                national varchar(100) not null,
    HASH                 varchar(255) not null,
-   SALT                 varchar(255) not null,
+   STREET               varchar(255),
+   HOUSE_NUMBER         varchar(5),
    ACTIVE               bool not null,
    primary key (USER_ID)
 );
@@ -123,9 +108,6 @@ create table UserType
    primary key (TYPE_ID)
 );
 
-alter table Address add constraint FK_Relationship_1 foreign key (POSTAL_CODE)
-      references PostalCode (POSTAL_CODE) on delete restrict on update restrict;
-
 alter table ItemImage add constraint FK_Relationship_9 foreign key (ITEM_ID)
       references Item (ITEM_ID) on delete restrict on update restrict;
 
@@ -135,15 +117,14 @@ alter table OrderItem add constraint FK_Relationship_7 foreign key (ORDER_ID)
 alter table OrderItem add constraint FK_Relationship_8 foreign key (ITEM_ID)
       references Item (ITEM_ID) on delete restrict on update restrict;
 
+alter table StoreUser add constraint FK_Relationship_10 foreign key (POSTAL_CODE)
+      references PostalCode (POSTAL_CODE) on delete restrict on update restrict;
+
 alter table StoreUser add constraint FK_Relationship_2 foreign key (TYPE_ID)
       references UserType (TYPE_ID) on delete restrict on update restrict;
-
-alter table StoreUser add constraint FK_Relationship_6 foreign key (ADDRESS_ID)
-      references Address (ADDRESS_ID) on delete restrict on update restrict;
 
 alter table UserOrder add constraint FK_Relationship_3 foreign key (USER_ID)
       references StoreUser (USER_ID) on delete restrict on update restrict;
 
 alter table UserOrder add constraint FK_Relationship_4 foreign key (STATUS_ID)
       references OrderStatus (STATUS_ID) on delete restrict on update restrict;
-

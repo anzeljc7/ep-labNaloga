@@ -2,7 +2,7 @@
 
 <link rel="stylesheet" type="text/css" href="<?= CSS_URL . "style.css" ?>">
 <meta charset="UTF-8" />
-<title>Add entry</title>
+<title>WebShop</title>
 
 <h1><?= $title ?></h1>
 

@@ -6,7 +6,7 @@ INSERT INTO OrderStatus (STATUS_ID, STATUS) VALUES (4000, 'REMOVED');
 INSERT INTO UserType (TYPE_ID, TYPE) VALUES (1000, 'ADMIN');
 INSERT INTO UserType (TYPE_ID, TYPE) VALUES (2000, 'SELLER');
 INSERT INTO UserType (TYPE_ID, TYPE) VALUES (3000, 'CUSTOMER');
-INSERT INTO UserType (TYPE_ID, TYPE) VALUES (4000, 'PENDING');
+INSERT INTO UserType (TYPE_ID, TYPE) VALUES (4000, 'UNACTIVE');
 
 INSERT INTO PostalCode (POSTAL_CODE, CITY)
 VALUES
@@ -14,15 +14,10 @@ VALUES
     (2000, 'Maribor'),
     (3000, 'Celje');
     
-INSERT INTO Address (POSTAL_CODE, STREET, HOUSE_NUMBER)
-VALUES
-    (1000, 'Main Street', 123),
-    (2000, 'Broadway Avenue', 456),
-    (3000, 'Oak Street', 789);
-    
-INSERT INTO StoreUser (TYPE_ID, ADDRESS_ID, NAME, SURNAME, EMAIL, HASH, SALT, ACTIVE)
-VALUES(2000, 1, 'John', 'Doe', 'john.doe@example.com', 'hashed_password', 'salt_value', 1),
-	(2000, 1, 'Jane', 'Smith', 'jane.smith@example.com', 'hashed_password_2', 'salt_value_2', 1);
+INSERT INTO StoreUser (POSTAL_CODE, TYPE_ID, NAME, SURNAME, EMAIL, HASH, STREET, HOUSE_NUMBER, ACTIVE)
+VALUES (null, 1000, 'Admin', 'Admin', 'admin@epLabNaloga.com', '$2y$10$6A.nfHu3zYj6zR00ce8QV.eKqUAL5oErJrQguoU.imcf/eFH2SzVq', null, null, 1),
+ (null, 2000, 'Prodajalec', 'Tilen', 'prodajalec@epLabNaloga.com', '$2y$10$6A.nfHu3zYj6zR00ce8QV.eKqUAL5oErJrQguoU.imcf/eFH2SzVq', null, null, 1),
+ (1000, 3000, 'Tilen', 'Anzeljc', 'tilen.anzeljc@gmail.com', '$2y$10$6A.nfHu3zYj6zR00ce8QV.eKqUAL5oErJrQguoU.imcf/eFH2SzVq', 'Mali Log', '21a', 1);
     
     
 INSERT INTO Item (ITEM_NAME, PRICE, ACTIVE, DESCRIPTION)

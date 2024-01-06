@@ -8,9 +8,18 @@ define('ORDER_CONFIRMED', 2000);
 define('ORDER_CANCELED', 3000);
 define('ORDER_REMOVED', 4000);
 
+define('TYPE_ADMIN', 1000);
+define('TYPE_SELLER', 2000);
+define('TYPE_CUSTOMER', 3000);
+define('TYPE_PENDING', 4000);
+
+require_once("controller/AuthController.php");
 require_once("controller/ItemsController.php");
 require_once("controller/ShoppingController.php");
 require_once("controller/OrdersController.php");
+require_once("controller/UsersController.php");
+require_once("controller/SellersController.php");
+require_once("controller/CustomersController.php");
 
 define("BASE_URL", $_SERVER["SCRIPT_NAME"] . "/");
 define("IMAGES_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php") . "static/images/");
@@ -19,7 +28,13 @@ define("CSS_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php") . "static/css/");
 $path = isset($_SERVER["PATH_INFO"]) ? trim($_SERVER["PATH_INFO"], "/") : "";
 
 // ROUTER: defines mapping between URLS and controllers
-$urls       = [
+$urls      = [
+    "login" => function () {
+        AuthController::login();
+    },
+    "register" => function () {
+        AuthController::register();
+    },
     "items" => function () {
         ItemsController::index();
     },
@@ -70,6 +85,33 @@ $urls       = [
     },
     "orders/update" => function () {
         OrdersController::ordersUpdate();
+    },
+    "users/myAccount" => function () {
+        UsersController::myAccount();
+    },
+    "sellers" => function () {
+        SellersController::index();
+    },
+    "sellers/add" => function () {
+        SellersController::addSeller();
+    },
+    "sellers/activate" => function () {
+        SellersController::activate();
+    },
+    "sellers/deactivate" => function () {
+        SellersController::deactivate();
+    },
+    "customers" => function () {
+        CustomersController::index();
+    },
+    "customers/add" => function () {
+        CustomersController::addCustomer();
+    },
+    "customers/activate" => function () {
+        CustomersController::activate();
+    },
+    "customers/deactivate" => function () {
+        CustomersController::deactivate();
     },
     "" => function () {
         ViewHelper::redirect(BASE_URL . "shop");

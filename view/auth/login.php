@@ -1,7 +1,13 @@
-<?php
+<!DOCTYPE html>
 
-/* 
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHP.php to edit this template
- */
+<link rel="stylesheet" type="text/css" href="<?= CSS_URL . "style.css" ?>">
+<meta charset="UTF-8" />
+<title>WebShop</title>
 
+<h1>Login</h1>
+
+<p>[
+    <a href="<?= BASE_URL . "register" ?>">Registration</a>
+    ]</p>
+
+<?= $form?>
