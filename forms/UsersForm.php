@@ -177,7 +177,6 @@ class CustomerSelfEditForm extends CustomerAbstractForm {
         $this->newPassword = new HTML_QuickForm2_Element_InputPassword('newPassword');
         $this->newPassword->setAttribute('placeholder', 'New password');
         $this->newPassword->setLabel('New password');
-        $this->newPassword->addRule('required', 'Please enter your new password');
         $this->newPassword->addRule('neq', 'Passwords are equal', $this->password);
         $this->addElement($this->newPassword);
 
@@ -237,7 +236,6 @@ class SellerAdminSelfEditForm extends UserAbstractForm {
         $this->newPassword = new HTML_QuickForm2_Element_InputPassword('newPassword');
         $this->newPassword->setAttribute('placeholder', 'New password');
         $this->newPassword->setLabel('New password');
-        $this->newPassword->addRule('required', 'Please enter your new password');
         $this->newPassword->addRule('neq', 'Passwords are equal', $this->password);
         $this->addElement($this->newPassword);
 

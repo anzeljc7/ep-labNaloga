@@ -4,10 +4,16 @@
 <meta charset="UTF-8" />
 <title>WebShop</title>
 
+<?php
+echo ViewHelper::render("view/navbar/navbar.php", [
+    "currUser" => $currUser
+])
+?>
+
 <h1><?= $title ?></h1>
 
 <p>[
-    <a href="<?= BASE_URL . $type ?>">All <?=$type?></a> |
+    <a href="<?= BASE_URL . $type . "/edit" ?>">All <?=$type?></a> |
     <a href="<?= BASE_URL . $type . "/add" ?>">Add new</a>
     ]</p>
 
@@ -15,7 +21,7 @@
 
     <?php foreach ($users as $user): ?>
         <li>
-            <a href="<?= BASE_URL . $type ."/?id=" . $user["user_id"] ?>"><?= $user["name"] ?> <?= $user["surname"] ?> : </a> 
+            <a href="<?= BASE_URL . $type ."/edit/?id=" . $user["user_id"] ?>"><?= $user["name"] ?> <?= $user["surname"] ?> : </a> 
             <span>(<?= $user["email"] ?>)</span>
             <?php if ($user["active"]) { ?>
                 <form action="<?= BASE_URL . $type . "/deactivate" ?>" method="post">

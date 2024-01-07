@@ -1,6 +1,7 @@
 <?php
 
 require_once("model/UserDB.php");
+require_once("model/AuthDB.php");
 require_once("ViewHelper.php");
 require_once("forms/UsersForm.php");
 
@@ -28,7 +29,17 @@ class AuthController {
                             "error" => "Your account is deactivated"
                         ]);
                     } else {
-                        ViewHelper::redirect(BASE_URL . "shop");
+
+                        AuthDB::addCurentUser($existingUsers[0]['user_id']);
+                        $currUserType = AuthDB::getCurrentUserType();
+
+                        if ($currUserType == TYPE_ADMIN) {
+                            ViewHelper::redirect(BASE_URL . "sellers");
+                        } else if ($currUserType == TYPE_CUSTOMER) {
+                            ViewHelper::redirect(BASE_URL . "shop");
+                        } else if($currUserType == TYPE_SELLER) {
+                            ViewHelper::redirect(BASE_URL . "items");
+                        }
                     }
                 }
             }
@@ -72,6 +83,11 @@ class AuthController {
                 "title" => "Register"
             ]);
         }
+    }
+
+    public static function logout() {
+        AuthDB::logout();
+        ViewHelper::redirect(BASE_URL . "login");
     }
 
     public static function confirmRegistration() {

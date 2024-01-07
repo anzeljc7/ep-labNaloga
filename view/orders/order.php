@@ -4,6 +4,11 @@
 <meta charset="UTF-8" />
 <title>WebShop</title>
 
+<?php
+echo ViewHelper::render("view/navbar/navbar.php", [
+    "currUser" => $currUser
+])
+?>
 
 <?php if ($order['status_id'] == ORDER_PENDING) { ?>
     <b style="color:yellow"> PENDING ORDER <b>

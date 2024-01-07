@@ -2,7 +2,13 @@
 
 <link rel="stylesheet" type="text/css" href="<?= CSS_URL . "style.css" ?>">
 <meta charset="UTF-8" />
-<title>Item detail</title>
+<title>WebShop</title>
+
+<?php
+echo ViewHelper::render("view/navbar/navbar.php", [
+    "currUser" => $currUser
+])
+?>
 
 <h1>Details of: <?= $item["item_name"] ?></h1>
 

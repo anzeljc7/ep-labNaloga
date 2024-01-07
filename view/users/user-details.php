@@ -4,7 +4,16 @@
 <meta charset="UTF-8" />
 <title>WebShop</title>
 
+<?php
+echo ViewHelper::render("view/navbar/navbar.php", [
+    "currUser" => $currUser
+])
+?>
+
 <h1><?= $title ?></h1>
+<p>[
+    <a href="<?= BASE_URL . $type  ?>">Back</a>
+    ]</p>
 
 <?php if ($details) { ?>
     <p>Tip računa: <?= $user['type_id'] ?></p>
@@ -23,5 +32,12 @@
 <?php } ?>
 
 <?= $form ?>
-
+    
+<?php
+if(isset($error)){
+?>
+<p style="color:red"><?=$error?></p>
+<?php
+}
+?>
 

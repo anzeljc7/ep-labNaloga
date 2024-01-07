@@ -7,26 +7,14 @@ require_once("forms/UsersForm.php");
 class SellersController {
 
     public static function index() {
-        $rules = [
-            "id" => [
-                'filter' => FILTER_VALIDATE_INT,
-                'options' => ['min_range' => 1]
-            ]
-        ];
+        $inputParams["type_id"] = TYPE_SELLER;
+        $inputParams["user_id"] = 1;
 
-        $data = filter_input_array(INPUT_GET, $rules);
-        if ($data !== null && isset($data["id"])) {
-            self::editSeller();
-        } else {
-            $inputParams["type_id"] = TYPE_SELLER;
-            $inputParams["user_id"] = 1;
-
-            echo ViewHelper::render("view/users/user-list.php", [
-                "users" => UserDB::getByType($inputParams),
-                "title" => "List of sellers",
-                "type" => "sellers"
-            ]);
-        }
+        echo ViewHelper::render("view/users/user-list.php", [
+            "users" => UserDB::getByType($inputParams),
+            "title" => "List of sellers",
+            "type" => "sellers"
+        ]);
     }
 
     public static function addSeller() {
@@ -36,28 +24,31 @@ class SellersController {
             $formData = $form->getValue();
 
             $allowedKeys      = ['name', 'surname', 'email'];
-            $itemInsertParams = array_intersect_key($formData, array_flip($allowedKeys));
+            $userInsertParams = array_intersect_key($formData, array_flip($allowedKeys));
 
-            $existingUsers = UserDB::getByEmail(['email' => $itemInsertParams['email']]);
+            $existingUsers = UserDB::getByEmail(['email' => $userInsertParams['email']]);
             if (isset($existingUsers) && count($existingUsers) > 0) {
-                
+                echo ViewHelper::render("view/users/user-details.php", [
+                    "title" => "Add seller",
+                    "form" => $form,
+                    "details" => false,
+                    "type" => "sellers",
+                    "error" => "User with same email already exists"
+                ]);
             } else {
-                $itemInsertParams['hash']         = password_hash($formData['password'], PASSWORD_DEFAULT);
-                $itemInsertParams['type_id']      = TYPE_CUSTOMER;
-                $itemInsertParams['active']       = 1;
-                $itemInsertParams['postal_code']  = null;
-                $itemInsertParams['house_number'] = null;
-                $itemInsertParams['street']       = null;
+                $userInsertParams['hash']    = password_hash($formData['password'], PASSWORD_DEFAULT);
+                $userInsertParams['type_id'] = TYPE_SELLER;
+                $userInsertParams['active']  = 1;
 
-                UserDB::insert($itemInsertParams);
-                ViewHelper::redirect(BASE_URL . "customers");
+                UserDB::insertSellerAdmin($userInsertParams);
+                ViewHelper::redirect(BASE_URL . "sellers");
             }
         } else {
             echo ViewHelper::render("view/users/user-details.php", [
                 "title" => "Add seller",
                 "form" => $form,
                 "details" => false,
-                "type" => "customers"
+                "type" => "sellers"
             ]);
         }
     }
@@ -69,18 +60,26 @@ class SellersController {
             $formData = $editForm->getValue();
 
             if ($editForm->validate()) {
+                $allowedKeys    = ['user_id', 'name', 'surname', 'email'];
+                $userEditParams = array_intersect_key($formData, array_flip($allowedKeys));
 
-                $allowedKeys                    = ['user_id', 'name', 'surname', 'email', 'active'];
-                $userEditParams                 = array_intersect_key($formData, array_flip($allowedKeys));
-                $userEditParams['house_number'] = null;
-                $userEditParams['street']       = null;
-                $userEditParams['postal_code']  = null;
-
-                UserDB::update($userEditParams);
-                ViewHelper::redirect(BASE_URL . "sellers/edit?id=" . $userEditParams["user_id"]);
+                $existingUsers = UserDB::getByEmail(['email' => $userEditParams['email']]);
+                if (isset($existingUsers) && count($existingUsers) > 0 && $existingUsers[0]['user_id'] != $userEditParams['user_id']) {
+                    echo ViewHelper::render("view/users/user-details.php", [
+                        "title" => "Add seller",
+                        "user" => UserDB::get(['user_id' => $formData['user_id']]),
+                        "form" => $editForm,
+                        "details" => true,
+                        "type" => "sellers",
+                        "error" => "User with same email already exists"
+                    ]);
+                } else {
+                    UserDB::updateSellerAdmin($userEditParams);
+                    ViewHelper::redirect(BASE_URL . "sellers/edit?id=" . $userEditParams["user_id"]);
+                }
             } else {
                 echo ViewHelper::render("view/users/user-details.php", [
-                    "user" => $formData['user_id'],
+                    "user" => UserDB::get(['user_id' => $formData['user_id']]),
                     "title" => "Edit seller",
                     "form" => $editForm,
                     "details" => true,
@@ -108,7 +107,7 @@ class SellersController {
                     "user" => $user,
                     "form" => $editForm,
                     "details" => true,
-                    "type" => "customers"
+                    "type" => "sellers"
                 ]);
             }
         }

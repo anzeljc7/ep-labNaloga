@@ -7,26 +7,14 @@ require_once("forms/UsersForm.php");
 class CustomersController {
 
     public static function index() {
-        $rules = [
-            "id" => [
-                'filter' => FILTER_VALIDATE_INT,
-                'options' => ['min_range' => 1]
-            ]
-        ];
+        $inputParams["type_id"] = TYPE_CUSTOMER;
+        $inputParams["user_id"] = 1;
 
-        $data = filter_input_array(INPUT_GET, $rules);
-        if ($data !== null && isset($data["id"])) {
-            self::editCustomer();
-        } else {
-            $inputParams["type_id"] = TYPE_CUSTOMER;
-            $inputParams["user_id"] = 1;
-
-            echo ViewHelper::render("view/users/user-list.php", [
-                "users" => UserDB::getByType($inputParams),
-                "title" => "List of customers",
-                "type" => "customers"
-            ]);
-        }
+        echo ViewHelper::render("view/users/user-list.php", [
+            "users" => UserDB::getByType($inputParams),
+            "title" => "List of customers",
+            "type" => "customers"
+        ]);
     }
 
     public static function addCustomer() {
@@ -39,7 +27,7 @@ class CustomersController {
             $itemInsertParams = array_intersect_key($formData, array_flip($allowedKeys));
 
             $existingUsers = UserDB::getByEmail(['email' => $itemInsertParams['email']]);
-            if (isset($existingUsers) && count($existingUsers) > 0) {
+            if (isset($existingUsers) && count($existingUsers) > 1) {
                 echo ViewHelper::render("view/auth/register.php", [
                     "form" => $form,
                     "error" => "User with provided email already exists",
@@ -69,14 +57,26 @@ class CustomersController {
 
             if ($editForm->validate()) {
 
-                $allowedKeys    = ['user_id', 'postal_code', 'name', 'surname', 'email', 'street', 'house_number', 'active'];
+                $allowedKeys    = ['user_id', 'postal_code', 'name', 'surname', 'email', 'street', 'house_number'];
                 $userEditParams = array_intersect_key($formData, array_flip($allowedKeys));
 
-                UserDB::update($userEditParams);
-                ViewHelper::redirect(BASE_URL . "customers");
+                $existingUsers = UserDB::getByEmail(['email' => $userEditParams['email']]);
+                if (isset($existingUsers) && count($existingUsers) > 0 && $existingUsers[0]['user_id'] != $userEditParams['user_id']) {
+                    echo ViewHelper::render("view/users/user-details.php", [
+                        "user" => UserDB::get(['user_id' => $userEditParams['user_id']]),
+                        "title" => "Customer details",
+                        "form" => $editForm,
+                        "details" => true,
+                        "type" => "customers",
+                        "error" => "User with same email already exists"
+                    ]);
+                } else {
+                    UserDB::updateCustomer($userEditParams);
+                    ViewHelper::redirect(BASE_URL . "customers");
+                }
             } else {
                 echo ViewHelper::render("view/users/user-details.php", [
-                    "user" => $formData['user_id'],
+                    "user" => UserDB::get(['user_id' => $userEditParams['user_id']]),
                     "title" => "Customer details",
                     "form" => $editForm,
                     "details" => true,

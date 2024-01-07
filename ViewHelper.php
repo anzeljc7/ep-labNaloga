@@ -1,9 +1,11 @@
 <?php
+require_once("model/AuthDB.php");
 
 class ViewHelper {
 
     //Displays a given view and sets the $variables array into scope.
     public static function render($file, $variables = array()) {
+        $variables['currUser'] = AuthDB::getCurrentUser();
         extract($variables);
 
         ob_start();

@@ -8,10 +8,33 @@ class UserDB extends AbstractDB {
         return parent::modify("INSERT INTO StoreUser (postal_code, type_id, name, surname, email, hash, street, house_number, active)"
                         . " VALUES (:postal_code, :type_id, :name, :surname, :email, :hash, :street, :house_number, :active)", $params);
     }
-
+    
+    public static function insertSellerAdmin(array $params) {
+        return parent::modify("INSERT INTO StoreUser (type_id, name, surname, email, hash, active)"
+                        . " VALUES (:type_id, :name, :surname, :email, :hash, :active)", $params);
+    }
+    
     public static function update(array $params) {
         return parent::modify("UPDATE StoreUser SET postal_code = :postal_code, name = :name, "
-                        . "surname = :surname, email = :email, hash = :hash, street = :street, house_number = :house_number"
+                        . "surname = :surname, email = :email, street = :street, house_number = :house_number, hash:hash"
+                        . " WHERE user_id = :user_id", $params);
+    }
+    
+     public static function updateSelftSellerAdmin(array $params) {
+        return parent::modify("UPDATE StoreUser SET name = :name, hash = :hash, "
+                        . "surname = :surname, email = :email"
+                        . " WHERE user_id = :user_id", $params);
+    }
+    
+    public static function updateCustomer(array $params) {
+        return parent::modify("UPDATE StoreUser SET postal_code = :postal_code, name = :name, "
+                        . "surname = :surname, email = :email, street = :street, house_number = :house_number"
+                        . " WHERE user_id = :user_id", $params);
+    }
+
+    public static function updateSellerAdmin(array $params) {
+        return parent::modify("UPDATE StoreUser SET name = :name, "
+                        . "surname = :surname, email = :email"
                         . " WHERE user_id = :user_id", $params);
     }
 

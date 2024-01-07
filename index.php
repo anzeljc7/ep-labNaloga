@@ -35,6 +35,9 @@ $urls      = [
     "register" => function () {
         AuthController::register();
     },
+    "logout" => function () {
+        AuthController::logout();
+    },
     "items" => function () {
         ItemsController::index();
     },
@@ -86,11 +89,14 @@ $urls      = [
     "orders/update" => function () {
         OrdersController::ordersUpdate();
     },
-    "users/myAccount" => function () {
+    "myAccount" => function () {
         UsersController::myAccount();
     },
     "sellers" => function () {
         SellersController::index();
+    },
+    "sellers/edit" => function () {
+        SellersController::editSeller();
     },
     "sellers/add" => function () {
         SellersController::addSeller();
@@ -103,6 +109,9 @@ $urls      = [
     },
     "customers" => function () {
         CustomersController::index();
+    },
+    "customers/edit" => function () {
+        CustomersController::editCustomer();
     },
     "customers/add" => function () {
         CustomersController::addCustomer();

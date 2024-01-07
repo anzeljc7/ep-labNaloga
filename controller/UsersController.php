@@ -1,6 +1,7 @@
 <?php
 
 require_once("model/BookDB.php");
+require_once("model/AuthDB.php");
 require_once("ViewHelper.php");
 require_once("forms/BooksForm.php");
 
@@ -8,48 +9,102 @@ class UsersController {
 
     public static function myAccount() {
         //TODO PREVERI ZA KATERI TIP UPORABNIKA GRE IN NASTAVI USTREZNO FORMO 
-        $editForm = new CustomerSelfEditForm("edit_form");
+        $curUser      = AuthDB::getFullCurrentUser();
+        $currUserType = $curUser['type_id'];
+
+        $editForm = null;
+        $redirect = "";
+        if ($currUserType == TYPE_ADMIN) {
+            $editForm = new SellerAdminSelfEditForm("edit_form");
+            $redirect = "sellers";
+        }
+        if ($currUserType == TYPE_SELLER) {
+            $editForm = new SellerAdminSelfEditForm("edit_form");
+            $redirect = "items";
+        } else if ($currUserType == TYPE_CUSTOMER) {
+            $editForm = new CustomerSelfEditForm("edit_form");
+            $redirect = "shop";
+        }
 
         if ($editForm->isSubmitted()) {
+            $formData = $editForm->getValue();
+
             if ($editForm->validate()) {
-                $formData = $editForm->getValue();
 
-                $allowedKeys    = ['user_id', 'postal_code', 'name', 'surname', 'email', 'street', 'house_number'];
-                $userEditParams = array_intersect_key($formData, array_flip($allowedKeys));
+                $existingUsers = UserDB::getByEmail(['email' => $curUser['email']]);
+                if (isset($existingUsers) && count($existingUsers) > 0 && $existingUsers[0]['user_id'] != $formData['user_id']) {
+                    echo ViewHelper::render("view/users/user-details.php", [
+                        "user" => $curUser,
+                        "title" => "Your account",
+                        "form" => $editForm,
+                        "details" => false,
+                        "type" => $redirect,
+                        "error" => "User with same email already exists"
+                    ]);
+                } else {
+                    $result = password_verify($formData['password'], $existingUsers[0]['hash']);
 
-                UserDB::update($userEditParams);
-                ViewHelper::redirect(BASE_URL . "myAccount");
+                    if ($result) {
+                        if ($currUserType == TYPE_CUSTOMER) {
+                            self::editCustomer($formData, $existingUsers[0]['hash']);
+                        } else {
+                            self::editSellerAdmin($formData, $existingUsers[0]['hash']);
+                        }
+                    } else {
+                        echo ViewHelper::render("view/users/user-details.php", [
+                            "user" => $curUser,
+                            "title" => "Your account",
+                            "form" => $editForm,
+                            "details" => false,
+                            "type" => $redirect,
+                            "error" => "You entered wrong password"
+                        ]);
+                    }
+                    ViewHelper::redirect(BASE_URL . "myAccount");
+                }
             } else {
                 echo ViewHelper::render("view/users/user-details.php", [
+                    "user" => $curUser,
                     "title" => "Your account",
                     "form" => $editForm,
-                    "details" => false
+                    "details" => false,
+                    "type" => $redirect
                 ]);
             }
         } else {
-
-            $user = UserDB::get(['item_id' => 1]);
-
-            $dataSource = new HTML_QuickForm2_DataSource_Array($user);
+            $dataSource = new HTML_QuickForm2_DataSource_Array($curUser);
             $editForm->addDataSource($dataSource);
 
             echo ViewHelper::render("view/users/user-details.php", [
+                "user" => $curUser,
                 "title" => "Your account",
                 "form" => $editForm,
-                "details" => false
+                "details" => false,
+                "type" => $redirect
             ]);
         }
     }
 
-    public static function customersList() {
-        $inputParams["type_id"] = TYPE_CUSTOMER;
-        $inputParams["user_id"] = 1;
-
-        echo ViewHelper::render("view/users/user-list.php", [
-            "users" => UserDB::getByType($inputParams),
-            "title" => "List of customers",
-            "type" => "customers"
-        ]);
+    private static function editCustomer(array $formDatam, string $hash) {
+        $allowedKeys    = ['user_id', 'postal_code', 'name', 'surname', 'email', 'street', 'house_number'];
+        $userEditParams = array_intersect_key($formData, array_flip($allowedKeys));
+        if (!isset($formData['newPassword'])) {
+            $userEditParams['hash'] = password_hash($formData['newPassword'], PASSWORD_DEFAULT);
+        } else {
+            $userEditParams['hash'] = $hash;
+        }
+        UserDB::update($userEditParams);
     }
 
+    private static function editSellerAdmin(array $formData, string $hash) {
+
+        $allowedKeys    = ['name', 'surname', 'email', 'user_id'];
+        $userEditParams = array_intersect_key($formData, array_flip($allowedKeys));
+        if (!isset($formData['newPassword'])) {
+            $userEditParams['hash'] = password_hash($formData['newPassword'], PASSWORD_DEFAULT);
+        } else {
+            $userEditParams['hash'] = $hash;
+        }
+        UserDB::updateSelftSellerAdmin($userEditParams);
+    }
 }

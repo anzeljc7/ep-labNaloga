@@ -4,10 +4,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>WebShop</title>
-        <style>
-        </style>
     </head>
     <body>
+        <?php
+        echo ViewHelper::render("view/navbar/navbar.php", [
+            "currUser" => $currUser
+        ])
+        ?>
         <h1>Order preview</h1>
 
         <p>
