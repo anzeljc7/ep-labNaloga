@@ -2,6 +2,8 @@
 
 require_once("model/ItemDB.php");
 require_once("model/OrderDB.php");
+require_once("model/AuthDB.php");
+require_once("model/PostNumDB.php");
 require_once("model/OrderItemDB.php");
 require_once("model/ItemImageDB.php");
 require_once("ViewHelper.php");
@@ -95,14 +97,16 @@ class ShoppingController {
     }
 
     public static function orderPreview() {
-        $currentUser['name']     = "Tilen";
-        $currentUser['surname']  = "Anzeljc";
-        $currentUser['email']    = "tilen.anzeljc@gmail.com";
-        $currentUser['phone']    = "041587758";
-        $address['street']       = "Mali Log";
-        $address['house_number'] = "33a";
-        $address['postal_code']  = 1318;
-        $address['city']         = "Loski Potok";
+        $user = AuthDB::getFullCurrentUser();
+        $allowedKeys                = ['user_id', 'name', 'surname', 'email'];
+        $currentUser           = array_intersect_key($user, array_flip($allowedKeys));
+
+        $address['street']       = $user['street'];
+        $address['house_number'] =  $user['house_number'];
+        $address['postal_code']  = $user['postal_code'];
+        $post = PostNumDB::get(['postal_code' =>$address['postal_code']]);
+        $address['city']         = $post['city'];
+        
         $currDate  = date('Y-m-d H:i:s');
         $cartItems               = self::getItemsFromSession();
         $cartItems['date']       = $currDate;
@@ -116,11 +120,11 @@ class ShoppingController {
 
     public static function orderConfirm() {
         $cartItems = self::getItemsFromSession();
-        $user      = 1;
+        $user      = AuthDB::getCurrentUser();
         $currDate  = date('Y-m-d H:i:s');
 
-        $orderParams['user_id']    = 1;
-        $orderParams['status_id']  = 1000;
+        $orderParams['user_id']    = $user['user_id'];
+        $orderParams['status_id']  = ORDER_PENDING;
         $orderParams['order_date'] = $currDate;
         $orderParams['total']      = $cartItems['total'];
 

@@ -17,7 +17,7 @@ class PostNumDB extends AbstractDB {
         $codes =  parent::query("SELECT postal_code, city"
                         . " FROM PostalCode"
                         . " WHERE postal_code = :postal_code"
-                        . " ORDER BY id ASC", $id);
+                        . " ORDER BY postal_code ASC", $id);
         
         if (count($codes) == 1) {
             return $codes[0];

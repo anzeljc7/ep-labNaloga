@@ -20,6 +20,7 @@ require_once("controller/OrdersController.php");
 require_once("controller/UsersController.php");
 require_once("controller/SellersController.php");
 require_once("controller/CustomersController.php");
+require_once("AuthHelper.php");
 
 define("BASE_URL", $_SERVER["SCRIPT_NAME"] . "/");
 define("IMAGES_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php") . "static/images/");
@@ -36,91 +37,152 @@ $urls      = [
         AuthController::register();
     },
     "logout" => function () {
-        AuthController::logout();
+        if (AuthHelper::checkUserRole([TYPE_ADMIN, TYPE_CUSTOMER, TYPE_SELLER])) {
+            AuthController::logout();
+        }
     },
     "items" => function () {
-        ItemsController::index();
+        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+            ItemsController::index();
+        }
     },
     "items/add" => function () {
-        ItemsController::add();
+        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+            ItemsController::add();
+        }
     },
     "items/edit" => function () {
-        ItemsController::edit();
+        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+            ItemsController::edit();
+        }
     },
     "items/activate" => function () {
-        ItemsController::activate();
+        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+            ItemsController::activate();
+        }
     },
     "items/deactivate" => function () {
-        ItemsController::deactivate();
+        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+            ItemsController::deactivate();
+        }
     },
     "shop" => function () {
         ShoppingController::index();
     },
     "shop/addToCart" => function () {
-        ShoppingController::addToCart();
+        if (AuthHelper::checkUserRole([TYPE_CUSTOMER])) {
+            ShoppingController::addToCart();
+        }
     },
     "shop/deleteCart" => function () {
-        ShoppingController::deleteFromCart();
+        if (AuthHelper::checkUserRole([TYPE_CUSTOMER])) {
+            ShoppingController::deleteFromCart();
+        }
     },
     "shop/updateCart" => function () {
-        ShoppingController::updateCart();
+        if (AuthHelper::checkUserRole([TYPE_CUSTOMER])) {
+            ShoppingController::updateCart();
+        }
     },
     "shop/previewOrder" => function () {
-        ShoppingController::orderPreview();
+        if (AuthHelper::checkUserRole([TYPE_CUSTOMER])) {
+            ShoppingController::orderPreview();
+        }
     },
     "shop/confirmOrder" => function () {
-        ShoppingController::orderConfirm();
+        if (AuthHelper::checkUserRole([TYPE_CUSTOMER])) {
+            ShoppingController::orderConfirm();
+        }
     },
     "orders" => function () {
-        OrdersController::index();
+        if (AuthHelper::checkUserRole([TYPE_CUSTOMER, TYPE_SELLER])) {
+            OrdersController::index();
+        }
+    },
+    "ordersMy" => function () {
+        if (AuthHelper::checkUserRole([TYPE_CUSTOMER])) {
+            OrdersController::ordersMy();
+        }
     },
     "ordersPending" => function () {
-        OrdersController::ordersPending();
+        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+            OrdersController::ordersPending();
+        }
     },
     "ordersConfirmed" => function () {
-        OrdersController::ordersConfirmed();
+        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+            OrdersController::ordersConfirmed();
+        }
     },
     "ordersCanceled" => function () {
-        OrdersController::ordersCanceled();
+        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+            OrdersController::ordersCanceled();
+        }
     },
     "ordersRemoved" => function () {
-        OrdersController::ordersRemoved();
+        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+            OrdersController::ordersRemoved();
+        }
     },
     "orders/update" => function () {
-        OrdersController::ordersUpdate();
+        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+            OrdersController::ordersUpdate();
+        }
     },
     "myAccount" => function () {
-        UsersController::myAccount();
+        if (AuthHelper::checkUserRole([TYPE_ADMIN, TYPE_CUSTOMER, TYPE_SELLER])) {
+            UsersController::myAccount();
+        }
     },
     "sellers" => function () {
-        SellersController::index();
+        if (AuthHelper::checkUserRole([TYPE_ADMIN])) {
+            SellersController::index();
+        }
     },
     "sellers/edit" => function () {
-        SellersController::editSeller();
+        if (AuthHelper::checkUserRole([TYPE_ADMIN])) {
+            SellersController::editSeller();
+        }
     },
     "sellers/add" => function () {
-        SellersController::addSeller();
+        if (AuthHelper::checkUserRole([TYPE_ADMIN])) {
+            SellersController::addSeller();
+        }
     },
     "sellers/activate" => function () {
-        SellersController::activate();
+        if (AuthHelper::checkUserRole([TYPE_ADMIN])) {
+            SellersController::activate();
+        }
     },
     "sellers/deactivate" => function () {
-        SellersController::deactivate();
+        if (AuthHelper::checkUserRole([TYPE_ADMIN])) {
+            SellersController::deactivate();
+        }
     },
     "customers" => function () {
-        CustomersController::index();
+        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+            CustomersController::index();
+        }
     },
     "customers/edit" => function () {
-        CustomersController::editCustomer();
+        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+            CustomersController::editCustomer();
+        }
     },
     "customers/add" => function () {
-        CustomersController::addCustomer();
+        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+            CustomersController::addCustomer();
+        }
     },
     "customers/activate" => function () {
-        CustomersController::activate();
+        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+            CustomersController::activate();
+        }
     },
     "customers/deactivate" => function () {
-        CustomersController::deactivate();
+        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+            CustomersController::deactivate();
+        }
     },
     "" => function () {
         ViewHelper::redirect(BASE_URL . "shop");

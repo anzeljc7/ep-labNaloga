@@ -49,5 +49,6 @@ class AuthDb {
 
     public static function logout() {
         unset($_SESSION["user"]);
+        unset($_SESSION["cart"]);
     }
 }

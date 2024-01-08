@@ -16,6 +16,10 @@ class LoginForm extends HTML_QuickForm2 {
 
     public function __construct($id) {
         parent::__construct($id);
+        
+        $httpsUrl = str_replace('http://', 'https://', BASE_URL);
+
+        parent::__construct($id, "get", ["action" => $httpsUrl . "login"]);
 
         $this->email = new HTML_QuickForm2_Element_InputText('email');
         $this->email->setAttribute('size', 100);

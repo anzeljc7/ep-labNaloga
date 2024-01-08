@@ -21,7 +21,6 @@
             <strong>Order for:</strong><br>
             <?= $currentUser['name'] ?>  <?= $currentUser['surname'] ?><br>
             <?= $address['street'] ?> <?= $address['house_number'] ?> <?= $address['city'] ?> <?= $address['postal_code'] ?><br>
-            <a href="<?= BASE_URL . "account" ?>">Update your shopping address</a>
         </p>
 
         <table>

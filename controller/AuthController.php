@@ -3,6 +3,7 @@
 require_once("model/UserDB.php");
 require_once("model/AuthDB.php");
 require_once("ViewHelper.php");
+require_once("AuthHelper.php");
 require_once("forms/UsersForm.php");
 
 class AuthController {
@@ -30,14 +31,18 @@ class AuthController {
                         ]);
                     } else {
 
-                        AuthDB::addCurentUser($existingUsers[0]['user_id']);
-                        $currUserType = AuthDB::getCurrentUserType();
-
-                        if ($currUserType == TYPE_ADMIN) {
+                        $userType = $existingUsers[0]['type_id'];
+                        if ($userType == TYPE_ADMIN) {
+                            AuthHelper::checkForCertificate($existingUsers[0]['email']);
+                            AuthDB::addCurentUser($existingUsers[0]['user_id']);
                             ViewHelper::redirect(BASE_URL . "sellers");
-                        } else if ($currUserType == TYPE_CUSTOMER) {
+                        } else if ($userType == TYPE_CUSTOMER) {
+                            AuthHelper::checkForCertificate($existingUsers[0]['email']);
+                            AuthDB::addCurentUser($existingUsers[0]['user_id']);
                             ViewHelper::redirect(BASE_URL . "shop");
-                        } else if($currUserType == TYPE_SELLER) {
+                        } else if ($userType == TYPE_SELLER) {
+                            AuthHelper::checkForCertificate($existingUsers[0]['email']);
+                            AuthDB::addCurentUser($existingUsers[0]['user_id']);
                             ViewHelper::redirect(BASE_URL . "items");
                         }
                     }
