@@ -13,14 +13,15 @@
 
         <?php
         echo ViewHelper::render("view/navbar/navbar.php", [
-            "currUser" => $currUser
+            "currUser" => $currUser,
+            "cartCount" => $cartCount
         ])
         ?>
             
         <div class="container mx-auto m-4">
         <?php if (!$owner) { ?>
             <div class="d-flex justify-content-between align-items-center mb-4"> 
-                <h1><?= $title ?></h1>
+                <h1><?= $title ?> (<?= isset($orders) ? sizeof($orders) : 0 ?>)</h1>
                 <div class="d-flex justify-content-center"> 
                     <a class="btn btn-outline-primary ms-1" href="<?= BASE_URL . "ordersPending" ?>">Pending</a>
                     <a class="btn btn-outline-success ms-1" href="<?= BASE_URL . "ordersConfirmed" ?>">Confirmed</a>

@@ -11,7 +11,8 @@
     <body>
         <?php
         echo ViewHelper::render("view/navbar/navbar.php", [
-            "currUser" => $currUser
+            "currUser" => $currUser,
+            "cartCount" => $cartCount
         ])
         ?>
     <body>

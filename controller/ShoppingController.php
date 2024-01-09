@@ -7,6 +7,7 @@ require_once("model/PostNumDB.php");
 require_once("model/OrderItemDB.php");
 require_once("model/ItemImageDB.php");
 require_once("ViewHelper.php");
+require_once("CartHelper.php");
 require_once("forms/ItemsForm.php");
 
 class ShoppingController {
@@ -24,14 +25,25 @@ class ShoppingController {
             $inputParameters['item_id'] = $data["id"];
             echo ViewHelper::render("view/items/available-item-detail.php", [
                 "item" => ItemDB::get($inputParameters),
-                "cartItems" => self::getItemsFromSession()
+                "cartItems" => CartHelper::getItemsFromSession()
             ]);
         } else {
+            $items = ItemDB::getAllActive();
+            foreach ($items as $key => $item) {
+                $items[$key]['images'] = ItemImageDB::get(['item_id' => $item['item_id']]);
+            }
             echo ViewHelper::render("view/items/available-item-list.php", [
-                "items" => ItemDB::getAllActive(),
-                "cartItems" => self::getItemsFromSession()
+            "items" => $items,
+            "cartItems" => CartHelper::getItemsFromSession()
             ]);
         }
+    }
+
+    public static function cart() {
+
+        echo ViewHelper::render("view/items/shopping-cart.php", [
+            "cartItems" => CartHelper::getItemsFromSession()
+        ]);
     }
 
     public static function addToCart() {
@@ -53,7 +65,7 @@ class ShoppingController {
 
         echo ViewHelper::render("view/items/available-item-list.php", [
             "items" => ItemDB::getAllActive(),
-            "cartItems" => self::getItemsFromSession()
+            "cartItems" => CartHelper::getItemsFromSession()
         ]);
     }
 
@@ -61,7 +73,7 @@ class ShoppingController {
         unset($_SESSION["cart"]);
         echo ViewHelper::render("view/items/available-item-list.php", [
             "items" => ItemDB::getAllActive(),
-            "cartItems" => self::getItemsFromSession()
+            "cartItems" => CartHelper::getItemsFromSession()
         ]);
     }
 
@@ -92,24 +104,24 @@ class ShoppingController {
 
         echo ViewHelper::render("view/items/available-item-list.php", [
             "items" => ItemDB::getAllActive(),
-            "cartItems" => self::getItemsFromSession()
+            "cartItems" => CartHelper::getItemsFromSession()
         ]);
     }
 
     public static function orderPreview() {
-        $user = AuthDB::getFullCurrentUser();
-        $allowedKeys                = ['user_id', 'name', 'surname', 'email'];
-        $currentUser           = array_intersect_key($user, array_flip($allowedKeys));
+        $user        = AuthDB::getFullCurrentUser();
+        $allowedKeys = ['user_id', 'name', 'surname', 'email'];
+        $currentUser = array_intersect_key($user, array_flip($allowedKeys));
 
         $address['street']       = $user['street'];
-        $address['house_number'] =  $user['house_number'];
+        $address['house_number'] = $user['house_number'];
         $address['postal_code']  = $user['postal_code'];
-        $post = PostNumDB::get(['postal_code' =>$address['postal_code']]);
+        $post                    = PostNumDB::get(['postal_code' => $address['postal_code']]);
         $address['city']         = $post['city'];
-        
-        $currDate  = date('Y-m-d H:i:s');
-        $cartItems               = self::getItemsFromSession();
-        $cartItems['date']       = $currDate;
+
+        $currDate          = date('Y-m-d H:i:s');
+        $cartItems         = CartHelper::getItemsFromSession();
+        $cartItems['date'] = $currDate;
 
         echo ViewHelper::render("view/orders/order-preview.php", [
             "currentUser" => $currentUser,
@@ -119,7 +131,7 @@ class ShoppingController {
     }
 
     public static function orderConfirm() {
-        $cartItems = self::getItemsFromSession();
+        $cartItems = CartHelper::getItemsFromSession();
         $user      = AuthDB::getCurrentUser();
         $currDate  = date('Y-m-d H:i:s');
 
@@ -134,7 +146,7 @@ class ShoppingController {
             $orderItemParams['order_id'] = $orderId;
             $orderItemParams['item_id']  = $item['item_id'];
             $orderItemParams['quantity'] = $item['qty'];
-            
+
             OrderItemDB::insert($orderItemParams);
         }
 
@@ -147,21 +159,4 @@ class ShoppingController {
         ]);
     }
 
-    private static function getItemsFromSession() {
-        $totalValue = 0;
-
-        if (isset($_SESSION["cart"])) {
-            foreach ($_SESSION["cart"] as $id => $quantity) {
-                $queryParams["item_id"]         = $id;
-                $item                           = ItemDB::get($queryParams);
-                $cartItems["items"][$id]        = $item;
-                $cartItems["items"][$id]['qty'] = $quantity;
-                $totalValue                     += $quantity * $item['price'];
-            }
-            $cartItems['total'] = $totalValue;
-            return $cartItems;
-        } else {
-            return [];
-        }
-    }
 }

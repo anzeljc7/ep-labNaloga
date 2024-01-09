@@ -22,11 +22,7 @@ class ItemImageDB extends AbstractDB {
                         . " FROM ItemImage"
                         . " WHERE item_id = :item_id", $id);
         
-        if (count($items) == 1) {
-            return $items[0];
-        } else {
-            throw new InvalidArgumentException("No such item");
-        }
+        return $items;
     }
     
     public static function getAll() {

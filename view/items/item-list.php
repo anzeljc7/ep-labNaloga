@@ -12,7 +12,8 @@
     <body>
         <?php
         echo ViewHelper::render("view/navbar/navbar.php", [
-            "currUser" => $currUser
+            "currUser" => $currUser,
+            "cartCount" => $cartCount
         ])
         ?>
 
@@ -20,7 +21,7 @@
         <div class="container mx-auto m-4">
 
             <div class="d-flex justify-content-between align-items-center mb-4"> 
-                <h1>All items</h1>
+                <h1>All items (<?= isset($items) ? sizeof($items) : 0 ?>)</h1>
                 <a class="btn btn-outline-primary" href="<?= BASE_URL . "items/add" ?>">Add new</a>
             </div>
 
@@ -38,7 +39,7 @@
                         <tr>
                             <td><?= $item["item_id"] ?></td>
                             <td><a href="<?= BASE_URL . "items?id=" . $item["item_id"] ?>"><?= $item["item_name"] ?></a></td>
-                            <td><?= $item["active"] ? 'Active' : 'Inactive' ?></td>
+                            <td><?php echo $item['active'] ? '<span class="badge bg-success rounded-pill">Active</span>' : '<span class="badge bg-danger rounded-pill">Unactive</span>'; ?></td>
                             <td>
                                 <?php if ($item["active"]) { ?>
                                     <form action="<?= BASE_URL . "items/deactivate" ?>" method="post">

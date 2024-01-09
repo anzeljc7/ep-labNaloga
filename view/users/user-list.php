@@ -12,14 +12,15 @@
     <body>
         <?php
         echo ViewHelper::render("view/navbar/navbar.php", [
-            "currUser" => $currUser
+            "currUser" => $currUser,
+            "cartCount" => $cartCount
         ])
         ?>
 
         <div class="container mx-auto m-4">
 
             <div class="d-flex justify-content-between align-items-center mb-4"> 
-                <h1><?= $title ?></h1>
+                <h1><?= $title ?> (<?= isset($users) ? sizeof($users) : 0?>)</h1>
                 <a class="btn btn-outline-primary" href="<?= BASE_URL . $type . "/add" ?>">Add new</a>
             </div>
 
@@ -38,7 +39,7 @@
                         <td><?= $user["user_id"] ?></td>
                         <td><a href="<?= BASE_URL . $type . "/edit/?id=" . $user["user_id"] ?>"><?= $user["email"] ?></a> 
                         </td>
-                        <td><?= $user["active"] ? 'Active' : 'Inactive' ?></td>
+                        <td><?php echo $user['active'] ? '<span class="badge bg-success rounded-pill">Active</span>' : '<span class="badge bg-danger rounded-pill">Unactive</span>'; ?></td>
                         <td>
 
                           

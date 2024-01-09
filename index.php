@@ -31,6 +31,7 @@ $path = isset($_SERVER["PATH_INFO"]) ? trim($_SERVER["PATH_INFO"], "/") : "";
 // ROUTER: defines mapping between URLS and controllers
 $urls      = [
     "login" => function () {
+        //AuthHelper::checkForCertificate("test");
         AuthController::login();
     },
     "register" => function () {
@@ -42,8 +43,20 @@ $urls      = [
         }
     },
     "items" => function () {
-        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+
+        if (AuthHelper::checkUserRole([TYPE_SELLER, TYPE_CUSTOMER])) {
+            //AuthHelper::checkForCertificate("test");
             ItemsController::index();
+        }
+    },
+    "items/uploadImages" => function () {
+        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+            ItemsController::uploadImages();
+        }
+    },
+    "items/editImages" => function () {
+        if (AuthHelper::checkUserRole([TYPE_SELLER])) {
+            ItemsController::editImages();
         }
     },
     "items/add" => function () {
@@ -68,6 +81,9 @@ $urls      = [
     },
     "shop" => function () {
         ShoppingController::index();
+    },
+    "shop/cart" => function () {
+        ShoppingController::cart();
     },
     "shop/addToCart" => function () {
         if (AuthHelper::checkUserRole([TYPE_CUSTOMER])) {

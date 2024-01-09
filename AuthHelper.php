@@ -46,6 +46,9 @@ class AuthHelper {
         
             # preberemo ime uporabnika (polje "common name")
             $commonname = $cert_data['subject']['CN'];
+        }else{
+            echo "Ni podan cert";
         }
+        
     }
 }

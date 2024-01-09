@@ -14,7 +14,8 @@
 
     <?php
     echo ViewHelper::render("view/navbar/navbar.php", [
-        "currUser" => $currUser
+        "currUser" => $currUser,
+        "cartCount" => $cartCount
     ])
     ?>
 
@@ -25,19 +26,22 @@
         </div>
 
         <?php if ($details) { ?>
-            <p>Tip računa: <?= $user['type_id'] ?></p>
-            <p>Status računa: <?= $user['active'] ?></p>
-            <?php if ($user["active"]) { ?>
-                <form action="<?= BASE_URL . $type . "/deactivate" ?>" method="post">
-                    <input type="hidden" name="id" value="<?php echo $user["user_id"]; ?>">
-                    <button type="submit">Deactivate</button>
-                </form>
-            <?php } else { ?>
-                <form action="<?= BASE_URL . $type . "/activate" ?>" method="post">
-                    <input type="hidden" name="id" value="<?php echo $user["user_id"]; ?>">
-                    <button type="submit">Activate</button>
-                </form>
-            <?php } ?>
+            <div class="d-flex justify-content-between align-items-center mb-4"> 
+                <p class='m-0'>Account status
+                    <?php echo $user['active'] ? '<span class="badge bg-success rounded-pill">Active</span>' : '<span class="badge bg-danger rounded-pill">Unactive</span>'; ?>
+                </p>
+                <?php if ($user["active"]) { ?>
+                    <form action="<?= BASE_URL . $type . "/deactivate" ?>" method="post">
+                        <input type="hidden" name="id" value="<?php echo $user["user_id"]; ?>">
+                        <button type="submit" class="btn btn-danger">Deactivate</button>
+                    </form>
+                <?php } else { ?>
+                    <form action="<?= BASE_URL . $type . "/activate" ?>" method="post">
+                        <input type="hidden" name="id" value="<?php echo $user["user_id"]; ?>">
+                        <button type="submit" class="btn btn-success">Activate</button>
+                    </form>
+                <?php } ?>
+            </div>
         <?php } ?>
 
         <?= $form ?>
