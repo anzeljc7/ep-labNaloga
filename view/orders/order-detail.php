@@ -21,7 +21,7 @@
                 
                                     
 
-                <a href="<?= BASE_URL . $currUser['user_id'] === $user['user_id'] ? "ordersPending" : "ordersMy"  ?>" class="btn btn-secondary ms-2">Back</a>
+                <a href="<?= BASE_URL . $currUser['user_id'] === $user['user_id'] ? "ordersPending" : "ordersMy"  ?>" class="btn btn-outline-secondary ms-2">Back</a>
             </div>
 
 

@@ -16,25 +16,28 @@ class LoginForm extends HTML_QuickForm2 {
 
     public function __construct($id) {
         parent::__construct($id);
-        
+
         $httpsUrl = str_replace('http://', 'https://', BASE_URL);
 
         parent::__construct($id, "get", ["action" => $httpsUrl . "login"]);
 
         $this->email = new HTML_QuickForm2_Element_InputText('email');
-        $this->email->setAttribute('size', 100);
+        $this->email->setAttribute('placeholder', 'Email');
         $this->email->setLabel('Email');
         $this->email->addRule('required', 'Provide your email.');
         $this->email->addRule('regex', 'Provide valid email.', '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/');
+        $this->email->setAttribute("class", "form-control mb-3");
         $this->addElement($this->email);
 
         $this->password = new HTML_QuickForm2_Element_InputPassword('password');
         $this->password->setAttribute('placeholder', 'Password');
         $this->password->setLabel('Password');
         $this->password->addRule('required', 'Please enter your password');
+        $this->password->setAttribute("class", "form-control");
         $this->addElement($this->password);
 
         $this->button = new HTML_QuickForm2_Element_InputSubmit(null);
+        $this->button->setAttribute("class", 'btn btn-primary w-100');
         $this->button->setAttribute('value', 'Login');
 
         $this->addElement($this->button);
@@ -59,6 +62,7 @@ abstract class UserAbstractForm extends HTML_QuickForm2 {
         $this->name->setLabel('Name');
         $this->name->addRule('required', 'Provide your name.');
         $this->name->addRule('regex', 'Letters only.', '/^[a-zA-ZščćžŠČĆŽ ]+$/');
+        $this->name->setAttribute("class", "form-control");
         $this->addElement($this->name);
 
         $this->surname = new HTML_QuickForm2_Element_InputText('surname');
@@ -66,6 +70,8 @@ abstract class UserAbstractForm extends HTML_QuickForm2 {
         $this->surname->setLabel('Surname');
         $this->surname->addRule('required', 'Provide your surname.');
         $this->surname->addRule('regex', 'Letters only.', '/^[a-zA-ZščćžŠČĆŽ ]+$/');
+        $this->surname->setAttribute("class", "form-control");
+
         $this->addElement($this->surname);
 
         $this->email = new HTML_QuickForm2_Element_InputText('email');
@@ -73,6 +79,8 @@ abstract class UserAbstractForm extends HTML_QuickForm2 {
         $this->email->setLabel('Email');
         $this->email->addRule('required', 'Provide your email.');
         $this->email->addRule('regex', 'Provide valid email.', '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/');
+        $this->email->setAttribute("class", "form-control");
+
         $this->addElement($this->email);
 
         $this->button = new HTML_QuickForm2_Element_InputSubmit(null);
@@ -93,16 +101,19 @@ abstract class CustomerAbstractForm extends UserAbstractForm {
         $this->street->setLabel('Street');
         $this->street->addRule('required', 'Please enter your street');
         $this->street->addRule('regex', 'Letters only.', '/^[a-zA-ZščćžŠČĆŽ ]+$/');
+        $this->street->setAttribute("class", "form-control");
 
         $this->houseNumber = new HTML_QuickForm2_Element_InputText('house_number');
         $this->houseNumber->setAttribute('placeholder', 'House Number');
         $this->houseNumber->setLabel('House Number');
         $this->houseNumber->addRule('required', 'Please enter your house number');
+        $this->houseNumber->setAttribute("class", "form-control");
 
         $this->postalCode = new HTML_QuickForm2_Element_Select('postal_code');
         $this->postalCode->setLabel("Postal code");
         $this->postalCode->loadOptions(PostNumDB::getAll());
         $this->postalCode->addRule('required', 'PLease enter your postal code.');
+        $this->postalCode->setAttribute("class", "form-control");
 
         $this->addRecursiveFilter('trim');
         $this->addRecursiveFilter('htmlspecialchars');
@@ -120,6 +131,8 @@ class RegisterForm extends CustomerAbstractForm {
         $this->password->setAttribute('placeholder', 'Password');
         $this->password->setLabel('Password');
         $this->password->addRule('required', 'Please enter your password');
+        $this->password->setAttribute("class", "form-control mb-3");
+
         $this->addElement($this->password);
 
         $this->repeatPassword = new HTML_QuickForm2_Element_InputPassword('repeatPassword');
@@ -127,6 +140,8 @@ class RegisterForm extends CustomerAbstractForm {
         $this->repeatPassword->setLabel('Repeat Password');
         $this->repeatPassword->addRule('required', 'Please repeat your password');
         $this->repeatPassword->addRule('eq', 'Passwords do not match', $this->password);
+        $this->repeatPassword->setAttribute("class", "form-control mb-3");
+
         $this->addElement($this->repeatPassword);
 
         $this->addElement($this->street);
@@ -134,7 +149,21 @@ class RegisterForm extends CustomerAbstractForm {
         $this->addElement($this->postalCode);
 
         $this->button->setAttribute('value', 'Register');
+        $this->button->setAttribute("class", 'btn btn-primary w-100');
+
         $this->addElement($this->button);
+    }
+}
+
+class CustomerAddForm extends RegisterForm {
+
+
+    public function __construct($id) {
+        parent::__construct($id);
+
+        $this->button->setAttribute('value', 'Add account');
+        $this->button->setAttribute("class", 'btn btn-success');
+
     }
 }
 
@@ -149,6 +178,8 @@ class SellerAddForm extends UserAbstractForm {
         $this->password->setAttribute('placeholder', 'Password');
         $this->password->setLabel('Password');
         $this->password->addRule('required', 'Please enter your password');
+        $this->password->setAttribute("class", "form-control");
+
         $this->addElement($this->password);
 
         $this->repeatPassword = new HTML_QuickForm2_Element_InputPassword('repeatPassword');
@@ -156,9 +187,13 @@ class SellerAddForm extends UserAbstractForm {
         $this->repeatPassword->setLabel('Repeat Password');
         $this->repeatPassword->addRule('required', 'Please repeat your password');
         $this->repeatPassword->addRule('eq', 'Passwords do not match', $this->password);
+        $this->repeatPassword->setAttribute("class", "form-control");
+
         $this->addElement($this->repeatPassword);
 
         $this->button->setAttribute('value', 'Add account');
+        $this->button->setAttribute("class", 'btn btn-success');
+
         $this->addElement($this->button);
     }
 }
@@ -176,12 +211,16 @@ class CustomerSelfEditForm extends CustomerAbstractForm {
         $this->password->setAttribute('placeholder', 'Password');
         $this->password->setLabel('Password');
         $this->password->addRule('required', 'Please enter your password');
+        $this->password->setAttribute("class", "form-control");
+
         $this->addElement($this->password);
 
         $this->newPassword = new HTML_QuickForm2_Element_InputPassword('newPassword');
         $this->newPassword->setAttribute('placeholder', 'New password');
         $this->newPassword->setLabel('New password');
         $this->newPassword->addRule('neq', 'Passwords are equal', $this->password);
+        $this->newPassword->setAttribute("class", "form-control");
+
         $this->addElement($this->newPassword);
 
         $this->addElement($this->street);
@@ -195,6 +234,7 @@ class CustomerSelfEditForm extends CustomerAbstractForm {
         $this->addElement($this->active);
 
         $this->button->setAttribute('value', 'Edit your account');
+        $this->button->setAttribute("class", 'btn btn-primary');
         $this->addElement($this->button);
     }
 }
@@ -218,6 +258,8 @@ class CustomerEditForm extends CustomerAbstractForm {
         $this->addElement($this->active);
 
         $this->button->setAttribute('value', 'Edit account');
+        $this->button->setAttribute("class", 'btn btn-danger');
+
         $this->addElement($this->button);
     }
 }
@@ -235,12 +277,16 @@ class SellerAdminSelfEditForm extends UserAbstractForm {
         $this->password->setAttribute('placeholder', 'Password');
         $this->password->setLabel('Password');
         $this->password->addRule('required', 'Please enter your password');
+        $this->password->setAttribute("class", "form-control");
+
         $this->addElement($this->password);
 
         $this->newPassword = new HTML_QuickForm2_Element_InputPassword('newPassword');
         $this->newPassword->setAttribute('placeholder', 'New password');
         $this->newPassword->setLabel('New password');
         $this->newPassword->addRule('neq', 'Passwords are equal', $this->password);
+        $this->newPassword->setAttribute("class", "form-control");
+
         $this->addElement($this->newPassword);
 
         $this->userId = new HTML_QuickForm2_Element_InputHidden("user_id");
@@ -249,6 +295,8 @@ class SellerAdminSelfEditForm extends UserAbstractForm {
         $this->addElement($this->active);
 
         $this->button->setAttribute('value', 'Edit your account');
+        $this->button->setAttribute("class", 'btn btn-primary');
+
         $this->addElement($this->button);
     }
 }
@@ -268,6 +316,8 @@ class SellerEditForm extends UserAbstractForm {
         $this->addElement($this->active);
 
         $this->button->setAttribute('value', 'Edit account');
+        $this->button->setAttribute("class", 'btn btn-danger');
+
         $this->addElement($this->button);
     }
 }

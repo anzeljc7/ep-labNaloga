@@ -20,7 +20,7 @@
 
             <div class="d-flex justify-content-between align-items-center mb-4"> 
                 <h1><?= $title ?></h1>
-                <a class="btn btn-primary" href="<?= BASE_URL . $type . "/add" ?>">Add new</a>
+                <a class="btn btn-outline-primary" href="<?= BASE_URL . $type . "/add" ?>">Add new</a>
             </div>
 
                 <table class="rounded table mx-auto text-center bg-white">

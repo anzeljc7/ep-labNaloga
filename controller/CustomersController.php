@@ -18,7 +18,7 @@ class CustomersController {
     }
 
     public static function addCustomer() {
-        $form = new RegisterForm("add_form");
+        $form = new CustomerAddForm("add_form");
 
         if ($form->validate()) {
             $formData = $form->getValue();
@@ -28,11 +28,14 @@ class CustomersController {
 
             $existingUsers = UserDB::getByEmail(['email' => $itemInsertParams['email']]);
             if (isset($existingUsers) && count($existingUsers) > 1) {
-                echo ViewHelper::render("view/auth/register.php", [
+                echo ViewHelper::render("view/users/user-details.php", [
+                    "title" => "Add customer",
                     "form" => $form,
-                    "error" => "User with provided email already exists",
-                    "title" => "Register"
+                    "details" => false,
+                    "type" => "sellers",
+                    "error" => "User with same email already exists"
                 ]);
+
             } else {
                 $itemInsertParams['hash']    = password_hash($formData['password'], PASSWORD_DEFAULT);
                 $itemInsertParams['type_id'] = TYPE_CUSTOMER;
@@ -42,10 +45,12 @@ class CustomersController {
                 ViewHelper::redirect(BASE_URL . "customers");
             }
         } else {
-            echo ViewHelper::render("view/auth/register.php", [
-                "title" => "Add customer",
-                "form" => $form
-            ]);
+            echo ViewHelper::render("view/users/user-details.php", [
+                    "title" => "Add customer",
+                    "form" => $form,
+                    "details" => false,
+                    "type" => "sellers",
+                ]);
         }
     }
 
