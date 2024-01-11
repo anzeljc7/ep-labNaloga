@@ -21,14 +21,16 @@
             <div class="mt-3">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1>Uploaded Images</h1>
-                    
+
                     <a href="<?= BASE_URL . "items/edit?id=" . $itemId ?>" class="btn btn-outline-secondary ms-2">Back</a>
                 </div>
-                <div class="image-container">
+                <div class="image-container d-flex justify-content-between align-items-center mb-4">
                     <?php
                     foreach ($uploadedFiles as $file) {
                         ?>
-                        <img src="<?= IMAGES_URL . $file['image_path'] ?>" class="img-thumbnail">
+                        <div style=" height: 150px; width:150px; overflow: hidden; border-radius: 8px">
+                            <img src="<?= IMAGES_URL . $file['image_path'] ?>" class="d-block w-100 h-100" style="object-fit: cover;">
+                        </div>
                     <?php } ?>
                 </div>
             </div>

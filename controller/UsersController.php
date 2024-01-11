@@ -3,7 +3,7 @@
 require_once("model/BookDB.php");
 require_once("model/AuthDB.php");
 require_once("ViewHelper.php");
-require_once("forms/BooksForm.php");
+require_once("forms/UsersForm.php");
 
 class UsersController {
 

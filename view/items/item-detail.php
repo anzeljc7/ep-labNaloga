@@ -28,35 +28,31 @@
                 </div>
             </div>
             <div class="row">
-                <div id="imageCarousel" class="carousel slide" data-ride="carousel" >
-                    <div class="carousel-inner bg-primary">
-                        <?php
-                        $firstImage = true; // Flag to determine the first image
-
-                        foreach ($uploadedImages as $image) {
-                            ?>
-                            <div class="carousel-item <?= $firstImage ? 'active' : '' ?>">
-                                <img src="<?= IMAGES_URL . $image['image_path'] ?>" alt="Image">
-                            </div>
+                <div class="col-md-4">
+                    <div id="imageCarousel" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner bg-dark d-flex align-items-center"  style=" height: 400px; overflow: hidden; border-radius: 8px; text-align: center;">
                             <?php
-                            $firstImage = false; // Set the flag to false after the first iteration
-                        }
-                        ?>
+                            $firstImage = true; // Flag to determine the first image
+                            foreach ($uploadedImages as $image) {
+                                ?>
+                                <div class="carousel-item <?= $firstImage ? 'active' : '' ?>">
+                                    <img src="<?= IMAGES_URL . $image['image_path'] ?>" class="d-block w-100 h-100" style="object-fit: cover;" alt="Image">
+                                </div>
+                                <?php
+                                $firstImage = false;
+                            }
+                            ?>
+                        </div>
+                        <a class="carousel-control-prev" href="#imageCarousel" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </a>
+                        <a class="carousel-control-next" href="#imageCarousel" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </a>
                     </div>
-                    <a class="carousel-control-prev" href="#imageCarousel" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" ></span>
-
-                    </a>
-                    <a class="carousel-control-next" href="#imageCarousel" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" ></span>
-
-                    </a>
                 </div>
 
-
-                <div class="col-md-8 ">
-
-
+                <div class="col-md-8">
                     <ul class="list-group">
                         <li class="list-group-item">Description: <i><?= $item["description"] ?></i></li>
                         <li class="list-group-item">Price: <b><?= $item["price"] ?> EUR</b></li>

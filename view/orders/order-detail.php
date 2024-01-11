@@ -33,7 +33,7 @@
             <p>
                 <strong>Order for:</strong><br>
                 
-                <?= $user['name'] ?>  <?= $user['surname'] ?> <?= $currUser['user_id'] ?> <?= $user['user_id'] ?><br>
+                <?= $user['name'] ?>  <?= $user['surname'] ?> <br>
                 <?= $address['street'] ?> <?= $address['house_number'] ?> <?= $address['city'] ?> <?= $address['postal_code'] ?><br>
             </p>
 
