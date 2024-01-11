@@ -20,43 +20,39 @@
         <div class="container mx-auto m-4">
 
             <div class="d-flex justify-content-between align-items-center mb-4"> 
-                <h1>All items (<?= isset($items) ? sizeof($items) : 0 ?>)</h1>
+                <h1>Shopping cart (<?= isset($cartItems["items"]) ? sizeof($cartItems["items"]) : 0 ?>)</h1>
                 <a class="btn btn-outline-secondary" href="<?= BASE_URL . "shop" ?>">Back</a>
             </div>
             <?php
-            if (isset($_SESSION["cart"])) {
+            if (isset($cartItems["items"])) {
                 ?>
                 <div class = "cart" >
-                    <h3>Shopping card</h3>
-                    <p>
-                        <?php
-                        $skupna_cena = 0;
-                        foreach ($cartItems["items"] as $item):
-                            ?>  
-                        <form action="<?= BASE_URL . "shop/updateCart" ?>" method="post">
-                            <input type="hidden" name="id" value="<?= $item["item_id"] ?>" />
-                            <p>
-                                <input type="number" name="qty" min="0" value= <?= $item["qty"] ?> />
-                                <?=
-                                substr(strip_tags($item["item_name"]), 0, 25);
-                                if (strlen($item["item_name"]) > 25) {
-                                    echo "...";
-                                }
-                                ?>
-                                <button type="submit">Update</button>
-                            </p>
-
+                    <?php
+                    $skupna_cena = 0;
+                    foreach ($cartItems["items"] as $item):
+                        ?>  
+                        <form class="d-flex justify-content-between align-items-center col-5 mb-3 mx-auto" action="<?= BASE_URL . "shop/updateCart" ?>" method="post">
+                            <input  type="hidden" name="id" value="<?= $item["item_id"] ?>" />
+                            <input class = "form-control" type="number" name="qty" min="0" value= <?= $item["qty"] ?> />
+                            <div class="d-flex justify-content-between align-items-center ms-5">
+                                <p class="m-0 ms-2" style="white-space: nowrap;"><?= $item["item_name"] ?></p>
+                                <button type="submit" class = "btn btn-primary btn-sm ms-2">Update</button>
+                            </div>
                         </form>
                         <?php
                     endforeach;
                     ?>  
-                    <p><b>Total:</b> <?= number_format($cartItems["total"], 2) ?> EUR<br/></br>
-                    <form action="<?= BASE_URL . "shop/deleteCart" ?>" method="post">
-                        <button type="submit">Empty shopping cart</button>
-                    </form>
-                    <form action="<?= BASE_URL . "shop/previewOrder" ?>" method="post">
-                        <button type="submit">Submit order</button>
-                    </form>
+
+                    <p class="text-center"><b>Total: </b><span class="badge bg-success rounded-pill p-2 ms-2"><?= number_format($cartItems["total"], 2) ?> EUR</span><br/></br>
+
+                    <div class="d-flex justify-content-center">
+                        <form action="<?= BASE_URL . "shop/deleteCart" ?>" method="post">
+                            <button class = "btn btn-danger ms-2" type="submit">Empty shopping cart</button>
+                        </form>
+                        <form action="<?= BASE_URL . "shop/previewOrder" ?>" method="post">
+                            <button class = "btn btn-success ms-2" type="submit">Submit order</button>
+                        </form>
+                    </div>
                     </p>
                 </div>
 

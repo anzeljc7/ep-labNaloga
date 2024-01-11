@@ -102,7 +102,7 @@ class ShoppingController {
             $_SESSION["cart"][$id] = $qty;
         }
 
-        echo ViewHelper::render("view/items/available-item-list.php", [
+        echo ViewHelper::render("view/items/shopping-cart.php", [
             "items" => ItemDB::getAllActive(),
             "cartItems" => CartHelper::getItemsFromSession()
         ]);

@@ -1,6 +1,7 @@
 <?php
 
 require_once("model/AuthDB.php");
+require_once("model/UserDB.php");
 
 class AuthHelper {
 
@@ -32,23 +33,41 @@ class AuthHelper {
             ViewHelper::redirect(BASE_URL . "login");
         }
     }
-    
-    public static function checkForCertificate($userEmail){
-        $authorized_users = ["Ana"];
-        
-        # preberemo odjemačev certifikat
-        $client_cert = filter_input(INPUT_SERVER, "SSL_CLIENT_CERT");
-        $commonname = null;
-        
-        if($client_cert !=null){
-            # in ga razčlenemo
-            $cert_data = openssl_x509_parse($client_cert);
-        
-            # preberemo ime uporabnika (polje "common name")
-            $commonname = $cert_data['subject']['CN'];
-        }else{
-            echo "Ni podan cert";
+
+    public static function checkForCertificate() {
+        $user = AuthDB::getFullCurrentUser();
+
+        if (!$user) {
+            ViewHelper::redirect(BASE_URL . "login");
+            return false;
+        } else {
+            $client_cert = filter_input(INPUT_SERVER, "SSL_CLIENT_CERT");
+
+            if ($user['type_id'] == TYPE_CUSTOMER) {
+                ViewHelper::redirect(BASE_URL . "shop");
+                return true;
+            }
+
+            if ($client_cert != null) {
+                $cert_data = openssl_x509_parse($client_cert);
+                $certEmail = $cert_data['subject']['emailAddress'];
+
+                if ($certEmail == $user['email'] && $user['type_id'] == TYPE_ADMIN) {
+                    ViewHelper::redirect(BASE_URL . "sellers");
+                    return true;
+                } else if ($certEmail == $user['email'] && $user['type_id'] == TYPE_SELLER) {
+                    ViewHelper::redirect(BASE_URL . "ordersPending");
+                    return true;
+                } else {
+                    AuthDB::logout();
+                    ViewHelper::redirect(BASE_URL . "login");
+                    return false;
+                }
+            } else {
+                AuthDB::logout();
+                ViewHelper::redirect(BASE_URL . "login");
+                return false;
+            }
         }
-        
     }
 }

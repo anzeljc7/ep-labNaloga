@@ -15,8 +15,8 @@ VALUES
     (3000, 'Celje');
     
 INSERT INTO StoreUser (POSTAL_CODE, TYPE_ID, NAME, SURNAME, EMAIL, HASH, STREET, HOUSE_NUMBER, ACTIVE)
-VALUES (null, 1000, 'Admin', 'Admin', 'admin@ep.com', '$2y$10$6A.nfHu3zYj6zR00ce8QV.eKqUAL5oErJrQguoU.imcf/eFH2SzVq', null, null, 1),
- (null, 2000, 'Nejc', 'Arh', 'nejc.arh@ep.com', '$2y$10$6A.nfHu3zYj6zR00ce8QV.eKqUAL5oErJrQguoU.imcf/eFH2SzVq', null, null, 1),
+VALUES (null, 1000, 'Admin', 'Admin', 'admin@ep.si', '$2y$10$6A.nfHu3zYj6zR00ce8QV.eKqUAL5oErJrQguoU.imcf/eFH2SzVq', null, null, 1),
+ (null, 2000, 'Nejc', 'Arh', 'nejc@ep.si', '$2y$10$6A.nfHu3zYj6zR00ce8QV.eKqUAL5oErJrQguoU.imcf/eFH2SzVq', null, null, 1),
  (1000, 3000, 'Tilen', 'Anzeljc', 'tilen.anzeljc7@gmail.com', '$2y$10$6A.nfHu3zYj6zR00ce8QV.eKqUAL5oErJrQguoU.imcf/eFH2SzVq', 'Tavčarjeva', '31c', 1);
     
     

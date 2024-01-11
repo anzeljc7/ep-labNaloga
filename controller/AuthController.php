@@ -30,21 +30,8 @@ class AuthController {
                             "error" => "Your account is deactivated"
                         ]);
                     } else {
-
-                        $userType = $existingUsers[0]['type_id'];
-                        if ($userType == TYPE_ADMIN) {
-                            AuthHelper::checkForCertificate($existingUsers[0]['email']);
-                            AuthDB::addCurentUser($existingUsers[0]['user_id']);
-                            ViewHelper::redirect(BASE_URL . "sellers");
-                        } else if ($userType == TYPE_CUSTOMER) {
-                            AuthHelper::checkForCertificate($existingUsers[0]['email']);
-                            AuthDB::addCurentUser($existingUsers[0]['user_id']);
-                            ViewHelper::redirect(BASE_URL . "shop");
-                        } else if ($userType == TYPE_SELLER) {
-                            AuthHelper::checkForCertificate($existingUsers[0]['email']);
-                            AuthDB::addCurentUser($existingUsers[0]['user_id']);
-                            ViewHelper::redirect(BASE_URL . "items");
-                        }
+                        AuthDB::addCurentUser($existingUsers[0]['user_id']);
+                        ViewHelper::redirect(BASE_URL . "cert");
                     }
                 }
             }
@@ -80,7 +67,7 @@ class AuthController {
                 $itemInsertParams['active']  = 1;
 
                 UserDB::insert($itemInsertParams);
-                ViewHelper::redirect(BASE_URL . "login");
+                ViewHelper::redirect(BASE_URL . "cert");
             }
         } else {
             echo ViewHelper::render("view/auth/register.php", [

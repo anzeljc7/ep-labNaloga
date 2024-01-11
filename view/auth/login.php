@@ -17,9 +17,17 @@
             <div class="d-flex align-items-center justify-content-center">
                 <?= $form ?>
             </div>
-            <p class="text-center">
-                Not a member? <a href="<?= BASE_URL . "register" ?>"> Sign up</a>
-            </p>
+            
+            <div class="d-flex align-items-center justify-content-around mt-3">
+                <p class="text-center m-0">
+                    Not a member? <a href="<?= BASE_URL . "register" ?>"> Sign up</a>
+                </p>
+
+                <p class="text-center m-0">
+                    <a href="<?= BASE_URL . "shop" ?>"> Countinue as guest</a>
+                </p>
+            </div>
+            
 
             <?php if (isset($error)) : ?>
                 <p style="color:red;"><?= $error ?></p>

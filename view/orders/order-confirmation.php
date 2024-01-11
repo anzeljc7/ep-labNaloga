@@ -15,13 +15,14 @@
             "cartCount" => $cartCount
         ])
         ?>
-
+        <div class="container mx-auto m-4 text-center">
         <h1>Order confirmed</h1>
 
-        <p>Your order with number <b>'<?= $orderSuccess['id'] ?>'<b> was successfully confirmed on <b><?= $orderSuccess['date'] ?><b></p>
-                            [ <a href="<?= BASE_URL . "shop" ?>">Continue shopping </a>]
-                            [ <a href="<?= BASE_URL . "ordersMy" ?>">View your order list </a>]
+        <p>Your order with number <b> <?= $orderSuccess['id'] ?> </b> was successfully confirmed on <b><?= $orderSuccess['date'] ?><b></p>
+        <a href="<?= BASE_URL . "shop" ?>" class="btn btn-primary btn-sm ms-2">Continue shopping </a>
+        <a href="<?= BASE_URL . "ordersMy"?>"  class="btn btn-secondary  btn-sm ms-2">View your order list </a>
 
-
+        </div>
+           
     </body>
 </html>
