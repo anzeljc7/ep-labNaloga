@@ -21,7 +21,7 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1>Details of: <?= $item["item_name"] ?></h1>
                 <div class="d-flex justify-content-center">
-                    <a href="<?= BASE_URL . $showEdit ? "shop" : "items" ?>" class="btn btn-outline-secondary ms-2">Back</a>
+                    <a href="<?= BASE_URL . ($showEdit == true ? "items" : "shop") ?>" class="btn btn-outline-secondary ms-2">Back</a>
                     <?php if ($showEdit): ?>
                         <a href="<?= BASE_URL . "items/edit?id=" . $item["item_id"] ?>" class="btn btn-outline-primary ms-2">Edit</a>
                     <?php endif; ?>

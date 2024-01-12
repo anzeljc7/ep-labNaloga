@@ -51,7 +51,6 @@ $urls      = [
         AuthController::fincrt();
     },
     "items" => function () {
-
         if (AuthHelper::checkUserRole([TYPE_SELLER, TYPE_CUSTOMER])) {
             ItemsController::index();
         }
@@ -90,7 +89,9 @@ $urls      = [
         ShoppingController::index();
     },
     "shop/cart" => function () {
-        ShoppingController::cart();
+        if (AuthHelper::checkUserRole([TYPE_CUSTOMER])) {
+            ShoppingController::cart();
+        }
     },
     "shop/addToCart" => function () {
         if (AuthHelper::checkUserRole([TYPE_CUSTOMER])) {

@@ -33,8 +33,8 @@ class ShoppingController {
                 $items[$key]['images'] = ItemImageDB::get(['item_id' => $item['item_id']]);
             }
             echo ViewHelper::render("view/items/available-item-list.php", [
-            "items" => $items,
-            "cartItems" => CartHelper::getItemsFromSession()
+                "items" => $items,
+                "cartItems" => CartHelper::getItemsFromSession()
             ]);
         }
     }
@@ -63,10 +63,7 @@ class ShoppingController {
             $_SESSION["cart"][$id] = 1;
         }
 
-        echo ViewHelper::render("view/items/available-item-list.php", [
-            "items" => ItemDB::getAllActive(),
-            "cartItems" => CartHelper::getItemsFromSession()
-        ]);
+        ViewHelper::redirect(BASE_URL . "shop");
     }
 
     public static function deleteFromCart() {
@@ -158,5 +155,4 @@ class ShoppingController {
             "orderSuccess" => $orderSuccess
         ]);
     }
-
 }

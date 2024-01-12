@@ -109,7 +109,7 @@ class ItemsController {
         $editForm = new ItemsEditForm("edit_form");
 
         if ($editForm->isSubmitted()) {
-            $formData       = $form->getValue();
+            $formData       = $editForm->getValue();
             $allowedKeys    = ['item_id', 'item_name', 'price', 'description'];
             $itemEditParams = array_intersect_key($formData, array_flip($allowedKeys));
             if ($editForm->validate()) {

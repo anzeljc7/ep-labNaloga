@@ -17,8 +17,7 @@ class UsersController {
         if ($currUserType == TYPE_ADMIN) {
             $editForm = new SellerAdminSelfEditForm("edit_form");
             $redirect = "sellers";
-        }
-        if ($currUserType == TYPE_SELLER) {
+        } else if ($currUserType == TYPE_SELLER) {
             $editForm = new SellerAdminSelfEditForm("edit_form");
             $redirect = "items";
         } else if ($currUserType == TYPE_CUSTOMER) {
@@ -50,6 +49,7 @@ class UsersController {
                         } else {
                             self::editSellerAdmin($formData, $existingUsers[0]['hash']);
                         }
+                        ViewHelper::redirect(BASE_URL . "myAccount");
                     } else {
                         echo ViewHelper::render("view/users/user-details.php", [
                             "user" => $curUser,
@@ -60,7 +60,6 @@ class UsersController {
                             "error" => "You entered wrong password"
                         ]);
                     }
-                    ViewHelper::redirect(BASE_URL . "myAccount");
                 }
             } else {
                 echo ViewHelper::render("view/users/user-details.php", [
@@ -88,7 +87,7 @@ class UsersController {
     private static function editCustomer(array $formDatam, string $hash) {
         $allowedKeys    = ['user_id', 'postal_code', 'name', 'surname', 'email', 'street', 'house_number'];
         $userEditParams = array_intersect_key($formData, array_flip($allowedKeys));
-        if (!isset($formData['newPassword'])) {
+        if (isset($formData['newPassword'])) {
             $userEditParams['hash'] = password_hash($formData['newPassword'], PASSWORD_DEFAULT);
         } else {
             $userEditParams['hash'] = $hash;
@@ -100,7 +99,7 @@ class UsersController {
 
         $allowedKeys    = ['name', 'surname', 'email', 'user_id'];
         $userEditParams = array_intersect_key($formData, array_flip($allowedKeys));
-        if (!isset($formData['newPassword'])) {
+        if (isset($formData['newPassword'])) {
             $userEditParams['hash'] = password_hash($formData['newPassword'], PASSWORD_DEFAULT);
         } else {
             $userEditParams['hash'] = $hash;
