@@ -41,14 +41,15 @@ $urls      = [
             AuthController::logout();
         }
     },
-    "cert" => function () {
-        ViewHelper::redirect(BASE_URL . "cert1");
+    "sfrd" => function () {
+        ViewHelper::redirect(BASE_URL . "login");
     },
-            
-    "cert1" => function () {
-        AuthHelper::checkForCertificate();
-    },   
-            
+    "cert" => function () {
+        AuthController::cert();
+    },
+    "fincrt" => function () {
+        AuthController::fincrt();
+    },
     "items" => function () {
 
         if (AuthHelper::checkUserRole([TYPE_SELLER, TYPE_CUSTOMER])) {

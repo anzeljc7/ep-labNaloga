@@ -30,8 +30,7 @@ class AuthController {
                             "error" => "Your account is deactivated"
                         ]);
                     } else {
-                        AuthDB::addCurentUser($existingUsers[0]['user_id']);
-                        ViewHelper::redirect(BASE_URL . "cert");
+                        ViewHelper::redirect(BASE_URL . "cert?id=" .$existingUsers[0]['user_id']);
                     }
                 }
             }
@@ -67,7 +66,7 @@ class AuthController {
                 $itemInsertParams['active']  = 1;
 
                 UserDB::insert($itemInsertParams);
-                ViewHelper::redirect(BASE_URL . "cert");
+                ViewHelper::redirect(BASE_URL . "sfrd");
             }
         } else {
             echo ViewHelper::render("view/auth/register.php", [
@@ -82,7 +81,35 @@ class AuthController {
         ViewHelper::redirect(BASE_URL . "login");
     }
 
-    public static function confirmRegistration() {
-        
+    public static function cert() {
+
+        $rules = [
+            "id" => [
+                'filter' => FILTER_VALIDATE_INT,
+                'options' => ['min_range' => 1]
+            ]
+        ];
+        $data  = filter_input_array(INPUT_GET, $rules);
+        if ($data !== null && isset($data["id"])) {
+            ViewHelper::redirect(BASE_URL . "fincrt?id=" . $data["id"]);
+        }else{
+            
+        }
+    }
+
+    public static function fincrt() {
+        $rules = [
+            "id" => [
+                'filter' => FILTER_VALIDATE_INT,
+                'options' => ['min_range' => 1]
+            ]
+        ];
+
+        $data = filter_input_array(INPUT_GET, $rules);
+        if ($data !== null && isset($data["id"])) {
+            AuthHelper::checkForCertificate($data["id"]);
+        } else {
+            ViewHelper::redirect(BASE_URL . "login");
+        }
     }
 }

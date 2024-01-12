@@ -34,8 +34,8 @@ class AuthHelper {
         }
     }
 
-    public static function checkForCertificate() {
-        $user = AuthDB::getFullCurrentUser();
+    public static function checkForCertificate(int $id) {
+        $user = UserDB::get(['user_id' => $id]);
 
         if (!$user) {
             ViewHelper::redirect(BASE_URL . "login");
@@ -44,6 +44,7 @@ class AuthHelper {
             $client_cert = filter_input(INPUT_SERVER, "SSL_CLIENT_CERT");
 
             if ($user['type_id'] == TYPE_CUSTOMER) {
+                AuthDB::addCurentUser($user['user_id']);
                 ViewHelper::redirect(BASE_URL . "shop");
                 return true;
             }
@@ -53,13 +54,14 @@ class AuthHelper {
                 $certEmail = $cert_data['subject']['emailAddress'];
 
                 if ($certEmail == $user['email'] && $user['type_id'] == TYPE_ADMIN) {
+                    AuthDB::addCurentUser($user['user_id']);
                     ViewHelper::redirect(BASE_URL . "sellers");
                     return true;
                 } else if ($certEmail == $user['email'] && $user['type_id'] == TYPE_SELLER) {
+                    AuthDB::addCurentUser($user['user_id']);
                     ViewHelper::redirect(BASE_URL . "ordersPending");
                     return true;
                 } else {
-                    AuthDB::logout();
                     ViewHelper::redirect(BASE_URL . "login");
                     return false;
                 }
