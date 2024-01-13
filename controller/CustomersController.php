@@ -32,7 +32,7 @@ class CustomersController {
                     "title" => "Add customer",
                     "form" => $form,
                     "details" => false,
-                    "type" => "sellers",
+                    "type" => "customers",
                     "error" => "User with same email already exists"
                 ]);
 
@@ -49,7 +49,7 @@ class CustomersController {
                     "title" => "Add customer",
                     "form" => $form,
                     "details" => false,
-                    "type" => "sellers",
+                    "type" => "customers",
                 ]);
         }
     }
@@ -77,7 +77,7 @@ class CustomersController {
                     ]);
                 } else {
                     UserDB::updateCustomer($userEditParams);
-                    ViewHelper::redirect(BASE_URL . "customers");
+                    ViewHelper::redirect(BASE_URL . "customers/edit/?id=" . $userEditParams['user_id']);
                 }
             } else {
                 echo ViewHelper::render("view/users/user-details.php", [

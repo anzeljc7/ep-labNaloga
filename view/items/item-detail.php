@@ -56,7 +56,8 @@
                     <ul class="list-group">
                         <li class="list-group-item">Description: <i><?= $item["description"] ?></i></li>
                         <li class="list-group-item">Price: <b><?= $item["price"] ?> EUR</b></li>
-                        <li class="list-group-item">Active: <b><?= $item["active"] ?></b></li>
+                        <li class="list-group-item"><?php echo $item['active'] ? '<span class="badge bg-success rounded-pill">Active</span>' : '<span class="badge bg-danger rounded-pill">Unactive</span>'; ?>
+                        </li>
                     </ul>
                 </div>
             </div>

@@ -24,11 +24,11 @@
 
                     <a href="<?= BASE_URL . "items/edit?id=" . $itemId ?>" class="btn btn-outline-secondary ms-2">Back</a>
                 </div>
-                <div class="image-container d-flex justify-content-between align-items-center mb-4">
+                <div class="image-container d-flex justify-content-start align-items-center mb-4">
                     <?php
                     foreach ($uploadedFiles as $file) {
                         ?>
-                        <div style=" height: 150px; width:150px; overflow: hidden; border-radius: 8px">
+                        <div class="ms-3" style=" height: 150px; width:150px; overflow: hidden; border-radius: 8px">
                             <img src="<?= IMAGES_URL . $file['image_path'] ?>" class="d-block w-100 h-100" style="object-fit: cover;">
                         </div>
                     <?php } ?>
@@ -38,7 +38,7 @@
             <form action = "<?= BASE_URL . "items/uploadImages/?id=" . $itemId ?>" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="images">Select Images</label>
-                    <input type="file" name="images[]" id="images" multiple class="form-control mb-3">
+                    <input type="file" name="images[]" id="images" multiple class="form-control mb-3" accept="image/png, image/gif, image/jpeg, image/jpg">
                 </div>
                 <button type="submit" class="btn btn-primary">Upload Images</button>
             </form>

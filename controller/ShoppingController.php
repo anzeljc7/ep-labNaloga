@@ -68,10 +68,8 @@ class ShoppingController {
 
     public static function deleteFromCart() {
         unset($_SESSION["cart"]);
-        echo ViewHelper::render("view/items/available-item-list.php", [
-            "items" => ItemDB::getAllActive(),
-            "cartItems" => CartHelper::getItemsFromSession()
-        ]);
+        ViewHelper::redirect(BASE_URL . "shop");
+
     }
 
     public static function updateCart() {

@@ -1,6 +1,5 @@
 <?php
 
-require_once("model/BookDB.php");
 require_once("model/AuthDB.php");
 require_once("ViewHelper.php");
 require_once("forms/UsersForm.php");
@@ -84,7 +83,7 @@ class UsersController {
         }
     }
 
-    private static function editCustomer(array $formDatam, string $hash) {
+    private static function editCustomer(array $formData, string $hash) {
         $allowedKeys    = ['user_id', 'postal_code', 'name', 'surname', 'email', 'street', 'house_number'];
         $userEditParams = array_intersect_key($formData, array_flip($allowedKeys));
         if (isset($formData['newPassword'])) {
