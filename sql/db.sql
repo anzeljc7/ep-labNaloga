@@ -185,7 +185,7 @@ VALUES
 	(1, "im1.jpeg"),
     (1, "im2.jpg"),
     (1, "im3.jpg"),
-    (2, "im4.jpeg"),
+    (2, "im4.jpg"),
     (3, "im5.jpg"),
     (4, "im6.jpg"),
     (5, "im7.jpg");
